@@ -3,24 +3,17 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
-using Telegram.Bot.Types;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
-using File = Telegram.Bot.Types.File;
-using System.Collections.Generic;
-using Google.Apis.Drive.v3;
-using Google.Apis.Drive.v3.Data;
-using static System.Net.WebRequestMethods;
-using Autofac.Core;
 
 namespace pvTgBot
 {
     class Program
     {
-        static TelegramBotClient _bot;
-        static System.Net.WebClient _wc;
-        static Random _rnd;      
+        private static TelegramBotClient _bot;
+        private static System.Net.WebClient _wc;
+        private static Random _rnd;      
 
         static void Main(string[] args)
         {
@@ -32,7 +25,7 @@ namespace pvTgBot
             _bot = new TelegramBotClient("1466263903:AAH11p2p6Ha3NB44GPkgN1_6fslGiz-8IJc");
 
             _bot.OnMessage += BotOnMessageReceived;
-            _bot.OnCallbackQuery += BotOnCallBackQueryReceived;
+            //_bot.OnCallbackQuery += BotOnCallBackQueryReceived;
 
             var me = _bot.GetMeAsync().Result;
 
@@ -41,53 +34,7 @@ namespace pvTgBot
             _bot.StartReceiving();
             Console.ReadLine();
             _bot.StopReceiving();                 
-        }
-
-        static async Task writeFileAsync(string path,string fileName)
-        {
-            using (StreamWriter sw = new StreamWriter(path, false))
-            {
-                await sw.WriteLineAsync(fileName); 
-            }
-        }
-
-        static async Task<string> readFileAsync(string fileName)
-        {
-            using (FileStream fs = System.IO.File.Open(fileName, FileMode.Open))
-            {
-                byte[] data = new byte[fs.Length];
-                await fs.ReadAsync(data, 0, (int)fs.Length);
-                string str = Encoding.UTF8.GetString(data);
-                return str;
-            }
-        }
-
-        private async static void BotOnCallBackQueryReceived(object sender, Telegram.Bot.Args.CallbackQueryEventArgs e)
-        {
-            string btnText = e.CallbackQuery.Data;
-            string name = $"{e.CallbackQuery.From.FirstName} {e.CallbackQuery.From.LastName}";
-
-            Console.WriteLine($"{name} send message: '{btnText}'");
-
-            try
-            {               
-                if (btnText == "picture")
-                {
-                    await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.imgonline.com.ua/examples/bee-on-daisy.jpg");
-                    
-                }
-                else if (btnText == "video")
-                {
-                    await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.youtube.com/watch?v=91JOUGJBTac");
-                }     
-
-                await _bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id, $"You press button {btnText}");
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
+        }     
 
         private async static void BotOnMessageReceived(object sender, MessageEventArgs e)
         {
@@ -220,21 +167,31 @@ namespace pvTgBot
             }
         }
 
-        public static string GetFilenameFromWebServer(string url)
+        private async static void BotOnCallBackQueryReceived(object sender, Telegram.Bot.Args.CallbackQueryEventArgs e)
         {
-            string result = "";
+            string btnText = e.CallbackQuery.Data;
+            string name = $"{e.CallbackQuery.From.FirstName} {e.CallbackQuery.From.LastName}";
 
-            var req = System.Net.WebRequest.Create(url);
-            req.Method = "HEAD";
-            using (System.Net.WebResponse resp = req.GetResponse())
-            {              
-                if (!string.IsNullOrEmpty(resp.Headers["Content-Disposition"]))
+            Console.WriteLine($"{name} send message: '{btnText}'");
+
+            try
+            {
+                if (btnText == "picture")
                 {
-                    result = resp.Headers["Content-Disposition"].Substring(resp.Headers["Content-Disposition"].IndexOf("filename=") + 9).Replace("\"", "");
-                }
-            }
+                    await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.imgonline.com.ua/examples/bee-on-daisy.jpg");
 
-            return result;
+                }
+                else if (btnText == "video")
+                {
+                    await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.youtube.com/watch?v=91JOUGJBTac");
+                }
+
+                await _bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id, $"You press button {btnText}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         private async static void homeWorkEntry(string textLink, int numberWork, string pictureLink, string filePath, MessageEventArgs e)
@@ -268,5 +225,41 @@ namespace pvTgBot
             else
                 await _bot.SendPhotoAsync(e.Message.Chat.Id, pictureLink, replyMarkup: inlineKeyboard);
         }
+
+        private static string GetFilenameFromWebServer(string url)
+        {
+            string result = "";
+
+            var req = System.Net.WebRequest.Create(url);
+            req.Method = "HEAD";
+            using (System.Net.WebResponse resp = req.GetResponse())
+            {
+                if (!string.IsNullOrEmpty(resp.Headers["Content-Disposition"]))
+                {
+                    result = resp.Headers["Content-Disposition"].Substring(resp.Headers["Content-Disposition"].IndexOf("filename=") + 9).Replace("\"", "");
+                }
+            }
+
+            return result;
+        }
+
+        private static async Task writeFileAsync(string path, string fileName)
+        {
+            using (StreamWriter sw = new StreamWriter(path, false))
+            {
+                await sw.WriteLineAsync(fileName);
+            }
+        }
+
+        private static async Task<string> readFileAsync(string fileName)
+        {
+            using (FileStream fs = System.IO.File.Open(fileName, FileMode.Open))
+            {
+                byte[] data = new byte[fs.Length];
+                await fs.ReadAsync(data, 0, (int)fs.Length);
+                string str = Encoding.UTF8.GetString(data);
+                return str;
+            }
+        }     
     }
 }
