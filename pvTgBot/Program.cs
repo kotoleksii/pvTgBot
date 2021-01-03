@@ -123,12 +123,12 @@ namespace pvTgBot
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
                     break;
                 case "📗 ADO.net #1":
-                    string bookLink1 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";
-                    bookEntry(bookLink1, 1, pictureUrl, e); 
+                    string bookLink1 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";                   
+                    newEntry(bookLink1, "1", pictureUrl, "", e);
                     break;
                 case "📗 ADO.net #2":
                     string bookLink2 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";
-                    bookEntry(bookLink2, 2, pictureUrl, e);
+                    newEntry(bookLink2, "2", pictureUrl, "", e);                   
                     break;
                 case "📚 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
@@ -142,11 +142,11 @@ namespace pvTgBot
                     break;
                 case "📄 Homework #1":
                     string textLink1 = "https://fsx1.itstep.org/api/v1/files/67SquyJh0Lzhvwbo2V6a60AaFdswwxiw";
-                    homeWorkEntry(textLink1, 1, "", "2224.txt", e);
+                    newEntry(textLink1, "", "", "", e);
                     break;
                 case "📄 Homework #2":
                     string textLink2 = "https://fsx1.itstep.org/api/v1/files/924Db9acPdOya-65NwQk71c0sNyfyh_3";
-                    homeWorkEntry(textLink2, 2, pictureUrl, "2225.txt", e);
+                    newEntry(textLink2, "", pictureUrl, "", e);
                     break;
                 #region
                 //case "/time":
@@ -166,65 +166,41 @@ namespace pvTgBot
                     break;
             }
         }
-
-        private async static void BotOnCallBackQueryReceived(object sender, Telegram.Bot.Args.CallbackQueryEventArgs e)
+        
+        private async static void newEntry(string link, string numberBook, string pictureLink, string filePath, MessageEventArgs e)
         {
-            string btnText = e.CallbackQuery.Data;
-            string name = $"{e.CallbackQuery.From.FirstName} {e.CallbackQuery.From.LastName}";
-
-            Console.WriteLine($"{name} send message: '{btnText}'");
-
-            try
+            if (numberBook != string.Empty/*&& filePath == string.Empty*/)
             {
-                if (btnText == "picture")
-                {
-                    await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.imgonline.com.ua/examples/bee-on-daisy.jpg");
-
-                }
-                else if (btnText == "video")
-                {
-                    await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.youtube.com/watch?v=91JOUGJBTac");
-                }
-
-                await _bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id, $"You press button {btnText}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        private async static void homeWorkEntry(string textLink, int numberWork, string pictureLink, string filePath, MessageEventArgs e)
-        {
-            string fileName = "";          
-
-            if (textLink != String.Empty)
-                fileName = _wc.DownloadString(textLink);          
-
-            if (filePath != String.Empty)
-                await writeFileAsync(filePath, fileName);
-         
-            var inlineKeyboard = new InlineKeyboardMarkup(new[] {
-                    InlineKeyboardButton.WithUrl($"{GetFilenameFromWebServer(textLink)}", textLink)
+                var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                    InlineKeyboardButton.WithUrl($"Open ADO.net book #{numberBook}", link)
                     });
 
-            if (pictureLink == String.Empty)
-                await _bot.SendTextMessageAsync(e.Message.Chat.Id, fileName, replyMarkup: inlineKeyboard);
+                if (pictureLink == String.Empty)
+                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, ". . .", replyMarkup: inlineKeyboard);
+                else
+                    await _bot.SendPhotoAsync(e.Message.Chat.Id, pictureLink, replyMarkup: inlineKeyboard);
+            }
             else
-                await _bot.SendPhotoAsync(e.Message.Chat.Id, pictureLink, fileName, replyMarkup: inlineKeyboard);
-        }
-       
-        private async static void bookEntry(string bookLink, int numberBook, string pictureLink, MessageEventArgs e)
-        {
-            var inlineKeyboard = new InlineKeyboardMarkup(new[] {
-                    InlineKeyboardButton.WithUrl($"Open ADO.net book #{numberBook.ToString()}", bookLink)
+            {
+                string fileName = "";
+
+                if (link != String.Empty)
+                    fileName = _wc.DownloadString(link);
+
+                if (filePath != String.Empty)
+                    await writeFileAsync(filePath, fileName);
+
+                var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                    InlineKeyboardButton.WithUrl($"{GetFilenameFromWebServer(link)}", link)
                     });
 
-            if (pictureLink == String.Empty)
-                await _bot.SendTextMessageAsync(e.Message.Chat.Id, ". . .", replyMarkup: inlineKeyboard);
-            else
-                await _bot.SendPhotoAsync(e.Message.Chat.Id, pictureLink, replyMarkup: inlineKeyboard);
-        }
+                if (pictureLink == String.Empty)
+                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, fileName, replyMarkup: inlineKeyboard);
+                else
+                    await _bot.SendPhotoAsync(e.Message.Chat.Id, pictureLink, fileName, replyMarkup: inlineKeyboard);
+            }
+            
+        }           
 
         private static string GetFilenameFromWebServer(string url)
         {
@@ -251,15 +227,52 @@ namespace pvTgBot
             }
         }
 
-        private static async Task<string> readFileAsync(string fileName)
-        {
-            using (FileStream fs = System.IO.File.Open(fileName, FileMode.Open))
-            {
-                byte[] data = new byte[fs.Length];
-                await fs.ReadAsync(data, 0, (int)fs.Length);
-                string str = Encoding.UTF8.GetString(data);
-                return str;
-            }
-        }     
+        //private async static void BotOnCallBackQueryReceived(object sender, CallbackQueryEventArgs e)
+        //{
+        //    string btnText = e.CallbackQuery.Data;
+        //    string name = $"{e.CallbackQuery.From.FirstName} {e.CallbackQuery.From.LastName}";
+
+        //    Console.WriteLine($"{name} send message: '{btnText}'");
+
+        //    try
+        //    {
+        //        if (btnText == "picture")
+        //        {
+        //            await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.imgonline.com.ua/examples/bee-on-daisy.jpg");
+
+        //        }
+        //        else if (btnText == "video")
+        //        {
+        //            await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.youtube.com/watch?v=91JOUGJBTac");
+        //        }
+
+        //        await _bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id, $"You press button {btnText}");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //}
+        //private static async Task<string> readFileAsync(string fileName)
+        //{
+        //    using (FileStream fs = System.IO.File.Open(fileName, FileMode.Open))
+        //    {
+        //        byte[] data = new byte[fs.Length];
+        //        await fs.ReadAsync(data, 0, (int)fs.Length);
+        //        string str = Encoding.UTF8.GetString(data);
+        //        return str;
+        //    }
+        //}
+        //private async static void bookEntry(string bookLink, int numberBook, string pictureLink, MessageEventArgs e)
+        //{
+        //    var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+        //            InlineKeyboardButton.WithUrl($"Open ADO.net book #{numberBook.ToString()}", bookLink)
+        //            });
+
+        //    if (pictureLink == String.Empty)
+        //        await _bot.SendTextMessageAsync(e.Message.Chat.Id, ". . .", replyMarkup: inlineKeyboard);
+        //    else
+        //        await _bot.SendPhotoAsync(e.Message.Chat.Id, pictureLink, replyMarkup: inlineKeyboard);
+        //}
     }
 }
