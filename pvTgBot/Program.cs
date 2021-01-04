@@ -90,6 +90,7 @@ namespace pvTgBot
                     break;
                 case "Start 🚀":
                 case "🔙 Back":
+                case "/start":
                     var replyKeyboard = new ReplyKeyboardMarkup(new[]
                     {
                         new[]
