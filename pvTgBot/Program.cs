@@ -22,28 +22,18 @@ namespace pvTgBot
 
             _rnd = new Random();
 
-            try
-            {
-                _bot = new TelegramBotClient("1466263903:AAH11p2p6Ha3NB44GPkgN1_6fslGiz-8IJc");
+            _bot = new TelegramBotClient("1466263903:AAH11p2p6Ha3NB44GPkgN1_6fslGiz-8IJc");
 
-                _bot.OnMessage += BotOnMessageReceived;
-                //_bot.OnCallbackQuery += BotOnCallBackQueryReceived;
+            _bot.OnMessage += BotOnMessageReceived;
+            //_bot.OnCallbackQuery += BotOnCallBackQueryReceived;
 
-                var me = _bot.GetMeAsync().Result;
+            var me = _bot.GetMeAsync().Result;
 
-                Console.WriteLine(me.FirstName);
+            Console.WriteLine(me.FirstName);
 
-                _bot.StartReceiving();
-            }
-            catch (Exception ex)
-            {            
-                Console.WriteLine(ex.Message);               
-            }
-            finally
-            {         
-                Console.ReadLine();
-                _bot.StopReceiving();
-            }
+            _bot.StartReceiving();
+            Console.ReadLine();
+            _bot.StopReceiving();                 
         }     
 
         private async static void BotOnMessageReceived(object sender, MessageEventArgs e)
@@ -58,8 +48,8 @@ namespace pvTgBot
             string name = $"{message.From.FirstName} {message.From.LastName}";
 
             Console.WriteLine($"{name} send message: '{message.Text}'");
-
-            switch (message.Text)
+        
+            switch(message.Text)
             {
                 #region
                 //                case "/start":
@@ -90,65 +80,64 @@ namespace pvTgBot
                 case "🚪 Exit":
                     var replyKeyboardStart = new ReplyKeyboardMarkup(new[]
                     {
-                    new[]
-                    {
-                        new KeyboardButton("Start 🚀")
-                    },
-                }, true);
+                        new[]
+                        {
+                            new KeyboardButton("Start 🚀")
+                        },                
+                    }, true);
                     var me = _bot.GetMeAsync().Result;
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀", replyMarkup: replyKeyboardStart);
                     break;
                 case "Start 🚀":
                 case "🔙 Back":
-                case "/start":
                     var replyKeyboard = new ReplyKeyboardMarkup(new[]
                     {
-                    new[]
-                    {
-                        new KeyboardButton("📚 Homework"),
-                        new KeyboardButton("📖 Educational Materials")
-                    },
-                    new[]
-                    {
-                        new KeyboardButton("🚪 Exit")
-                    },
-                    #region
-                    //new []
-                    //{
-                    //    new KeyboardButton("picture"),
-                    //    new KeyboardButton("Contact") { RequestContact = true},
-                    //    new KeyboardButton("Geo"){ RequestLocation = true}
-                    //},
+                        new[]
+                        {
+                            new KeyboardButton("📚 Homework"),
+                            new KeyboardButton("📖 Educational Materials")
+                        },
+                        new[]
+                        {
+                            new KeyboardButton("🚪 Exit")
+                        },
+                        #region
+                        //new []
+                        //{
+                        //    new KeyboardButton("picture"),
+                        //    new KeyboardButton("Contact") { RequestContact = true},
+                        //    new KeyboardButton("Geo"){ RequestLocation = true}
+                        //},
 #endregion
-                }, true);
-                    await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);
+                    }, true) ;                    
+                    await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);                   
                     break;
                 case "📖 Educational Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
-                    {
-                    new[] { new KeyboardButton("📗 ADO.net #2") },
-                    new[] { new KeyboardButton("📗 ADO.net #1"),},
-                    new[] { new KeyboardButton("🔙 Back"),},
+                   {
+                        new[] { new KeyboardButton("📗 ADO.net #2") },
+                        new[] { new KeyboardButton("📗 ADO.net #1"),},
+                        new[] { new KeyboardButton("🔙 Back"),},
 
-                }, true);
+                    }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
                     break;
                 case "📗 ADO.net #1":
-                    string bookLink1 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";
+                    string bookLink1 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";                   
                     newEntry(bookLink1, "1", pictureUrl, "", e);
                     break;
                 case "📗 ADO.net #2":
                     string bookLink2 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";
-                    newEntry(bookLink2, "2", pictureUrl, "", e);
+                    newEntry(bookLink2, "2", pictureUrl, "", e);                   
                     break;
                 case "📚 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
-                    {
-                    new[] { new KeyboardButton("📄 Homework #2") },
-                    new[] { new KeyboardButton("📄 Homework #1"),},
-                    new[] { new KeyboardButton("🔙 Back"),},
+                   {
+                        new[] { new KeyboardButton("📄 Homework #2") },
+                        new[] { new KeyboardButton("📄 Homework #1"),},
+                        new[] { new KeyboardButton("🔙 Back"),},
 
-                }, true);
+                    }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
                 case "📄 Homework #1":
@@ -165,20 +154,18 @@ namespace pvTgBot
                 //    await _bot.SendTextMessageAsync(e.Message.Chat.Id, response);
                 //    break; 
                 #endregion
-                default:
+                default:                   
                     string[] stickers = new string[] { "CAACAgIAAxkBAAKe11_wucfsL89gl0A3dmym3ifNsdpJAALIjQACY4tGDHjHpsKiUIbZHgQ",
-                    "CAACAgIAAxkBAAKe2l_wuqLp7KrmkHrLffW1AamtC1b5AAKFEQACPLPFB9QtAAFHuClv0x4E",
-                "CAACAgIAAxkBAAKe3V_wvT_0SoSQXsorY1z71DllxJX2AAKQEQACPLPFB_LLZcaKbmyGHgQ",
-                "CAACAgIAAxkBAAKe4F_wvXckhsdicvTp52ake9PSL-IzAAK0jQACY4tGDB_-KlQJwUFhHgQ",
-                "CAACAgIAAxkBAAKe41_wva3XnNWfUUY4qpAr1TB2sn_qAAIDjgACY4tGDLVBmwhgjPuuHgQ"
-                };
+                        "CAACAgIAAxkBAAKe2l_wuqLp7KrmkHrLffW1AamtC1b5AAKFEQACPLPFB9QtAAFHuClv0x4E",
+                    "CAACAgIAAxkBAAKe3V_wvT_0SoSQXsorY1z71DllxJX2AAKQEQACPLPFB_LLZcaKbmyGHgQ",
+                    "CAACAgIAAxkBAAKe4F_wvXckhsdicvTp52ake9PSL-IzAAK0jQACY4tGDB_-KlQJwUFhHgQ",
+                    "CAACAgIAAxkBAAKe41_wva3XnNWfUUY4qpAr1TB2sn_qAAIDjgACY4tGDLVBmwhgjPuuHgQ"
+                    };
                     int i = _rnd.Next(0, stickers.Length);
-                    await _bot.SendStickerAsync(message.Chat.Id, stickers[i]);
+                    await _bot.SendStickerAsync(message.Chat.Id, stickers[i]);          
                     break;
             }
-        }          
-        
-
+        }
         
         private async static void newEntry(string link, string numberBook, string pictureLink, string filePath, MessageEventArgs e)
         {
