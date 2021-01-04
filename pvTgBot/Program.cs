@@ -96,7 +96,11 @@ namespace pvTgBot
                         new[]
                         {
                             new KeyboardButton("📚 Homework"),
-                            new KeyboardButton("📖 Educational Materials")
+                            new KeyboardButton("📖 Materials")
+                        },
+                        new[]
+                        {
+                            new KeyboardButton("👨🏼‍💻 Classwork")
                         },
                         new[]
                         {
@@ -113,7 +117,7 @@ namespace pvTgBot
                     }, true) ;                    
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);                   
                     break;
-                case "📖 Educational Materials":
+                case "📖 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                    {
                         new[] { new KeyboardButton("📗 ADO.net #2") },
