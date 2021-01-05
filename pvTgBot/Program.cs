@@ -48,46 +48,9 @@ namespace pvTgBot
             string name = $"{message.From.FirstName} {message.From.LastName}";
 
             Console.WriteLine($"{name} send message: '{message.Text}'");
-        
-            switch(message.Text)
-            {
-                #region
-                //                case "/start":
-                //                    string text =
-                //@"Перелік команд:
-                ///start - запуск бота
-                ///inline - показати меню
-                ///keyboard - вивести клавіатуру";
-                //                    await _bot.SendTextMessageAsync(message.From.Id, text);
 
-                //                    break;
-                //case "/inline":
-                //    var inlineKeyboard = new InlineKeyboardMarkup(new[] {     
-                //        new[]
-                //        {
-                //            InlineKeyboardButton.WithUrl("fb", "fb.com"),
-                //            InlineKeyboardButton.WithUrl("instagram", "instagram.com")
-                //        },
-                //        new[]
-                //        {
-                //            InlineKeyboardButton.WithCallbackData("picture"),
-                //            InlineKeyboardButton.WithCallbackData("video")
-                //        }
-                //        });
-                //    await _bot.SendTextMessageAsync(message.From.Id, "Choose menu button", replyMarkup: inlineKeyboard);                  
-                //    break;
-                #endregion
-                case "🚪 Exit":
-                    var replyKeyboardStart = new ReplyKeyboardMarkup(new[]
-                    {
-                        new[]
-                        {
-                            new KeyboardButton("Start 🚀")
-                        },                
-                    }, true);
-                    var me = _bot.GetMeAsync().Result;
-                    await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀", replyMarkup: replyKeyboardStart);
-                    break;
+            switch (message.Text)
+            {                          
                 case "Start 🚀":
                 case "🔙 Back":
                 case "/start":
@@ -98,14 +61,8 @@ namespace pvTgBot
                             new KeyboardButton("📚 Homework"),
                             new KeyboardButton("📖 Materials")
                         },
-                        new[]
-                        {
-                            new KeyboardButton("👨🏼‍💻 Classwork")
-                        },
-                        new[]
-                        {
-                            new KeyboardButton("🚪 Exit")
-                        },
+                        new[] { new KeyboardButton("👨🏼‍💻 Classwork") },
+                        new[] { new KeyboardButton("🚪 Exit") }
                         #region
                         //new []
                         //{
@@ -114,16 +71,39 @@ namespace pvTgBot
                         //    new KeyboardButton("Geo"){ RequestLocation = true}
                         //},
 #endregion
-                    }, true) ;                    
-                    await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);                   
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);
+                    break;
+                case "👨🏼‍💻 Classwork":
+                    var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
+                    {
+                        new [] { new KeyboardButton("ADO.net") },
+                        new [] { new KeyboardButton("🔙 Back") }                       
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);                 
+                    break;
+                case "ADO.net":
+                    var link1 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
+                    var link2 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
+
+                    var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                        new[]
+                        {
+                            InlineKeyboardButton.WithUrl("1️⃣ intro (01.12.2020)", link1)
+                        },
+                        new[]
+                        {
+                            InlineKeyboardButton.WithUrl("2️⃣ detached (03.12.2020)", link2)
+                        }
+                    });
+                    await _bot.SendPhotoAsync(message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
                     break;
                 case "📖 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                    {
                         new[] { new KeyboardButton("📗 ADO.net #2") },
-                        new[] { new KeyboardButton("📗 ADO.net #1"),},
-                        new[] { new KeyboardButton("🔙 Back"),},
-
+                        new[] { new KeyboardButton("📗 ADO.net #1")},
+                        new[] { new KeyboardButton("🔙 Back"),}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
                     break;
@@ -139,9 +119,8 @@ namespace pvTgBot
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
                         new[] { new KeyboardButton("📄 Homework #2") },
-                        new[] { new KeyboardButton("📄 Homework #1"),},
-                        new[] { new KeyboardButton("🔙 Back"),},
-
+                        new[] { new KeyboardButton("📄 Homework #1")},
+                        new[] { new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
@@ -152,6 +131,14 @@ namespace pvTgBot
                 case "📄 Homework #2":
                     string textLink2 = "https://fsx1.itstep.org/api/v1/files/924Db9acPdOya-65NwQk71c0sNyfyh_3";
                     newEntry(textLink2, "", pictureUrl, "", e);
+                    break;
+                case "🚪 Exit":
+                    var replyKeyboardStart = new ReplyKeyboardMarkup(new[]
+                    {
+                        new[] { new KeyboardButton("Start 🚀") },
+                    }, true);
+                    var me = _bot.GetMeAsync().Result;
+                    await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀", replyMarkup: replyKeyboardStart);
                     break;
                 #region
                 //case "/time":
