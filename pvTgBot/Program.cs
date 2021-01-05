@@ -6,6 +6,9 @@ using Telegram.Bot.Types.ReplyMarkups;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
+using System.Xml;
+using System.Globalization;
+using System.Net.Http;
 
 namespace pvTgBot
 {
@@ -13,7 +16,10 @@ namespace pvTgBot
     {
         private static TelegramBotClient _bot;
         private static System.Net.WebClient _wc;
-        private static Random _rnd;      
+        private static Random _rnd;
+
+        public static string webhookUrl = "https://9f414946.ngrok.io/api/cards";
+        public static string token = "jkhhlkhblkhblkhblkhlkh";
 
         static void Main(string[] args)
         {
@@ -26,7 +32,7 @@ namespace pvTgBot
 
             _bot.OnMessage += BotOnMessageReceived;
             //_bot.OnCallbackQuery += BotOnCallBackQueryReceived;
-
+       
             var me = _bot.GetMeAsync().Result;
 
             Console.WriteLine(me.FirstName);
@@ -36,7 +42,7 @@ namespace pvTgBot
             _bot.StopReceiving();                 
         }     
 
-        private async static void BotOnMessageReceived(object sender, MessageEventArgs e)
+        private async static void BotOnMessageReceived(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {
             string pictureUrl = "https://www.pragimtech.com/wp-content/uploads/2019/02/ado.jpg";
 
@@ -140,6 +146,10 @@ namespace pvTgBot
                     var me = _bot.GetMeAsync().Result;
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀", replyMarkup: replyKeyboardStart);
                     break;
+                case "/kurs":                  
+                    var response = $"{GetExchangeRate()}\n\n{GetExchangeRateCrypto("BTC", "USD").Result}";                 
+                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, response);
+                    break;
                 #region
                 //case "/time":
                 //    var response = DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString();
@@ -158,8 +168,52 @@ namespace pvTgBot
                     break;
             }
         }
-        
-        private async static void newEntry(string link, string numberBook, string pictureLink, string filePath, MessageEventArgs e)
+
+        public static string GetExchangeRate()
+        {
+            decimal? usd = null, eur = null;
+            using (XmlTextReader reader = new XmlTextReader("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange"))
+            {
+                while (reader.ReadToFollowing("rate"))
+                {
+                    decimal rate = decimal.Parse(reader.ReadElementContentAsString(), CultureInfo.InvariantCulture);
+                    if (reader.ReadToFollowing("cc"))
+                    {
+                        switch (reader.ReadElementContentAsString())
+                        {
+                            case "USD": usd = rate; break;
+                            case "EUR": eur = rate; break;
+                        }
+                    }
+                }
+            }
+            return $"Актуальні курси валют:\n💵USD: {usd} ₴\n💶EUR: {eur} ₴";
+        }
+
+        public async static Task<string> GetExchangeRateCrypto(string from, string to)
+        {
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    client.BaseAddress = new Uri(" https://free.currconv.com");
+                    var response = await client.GetAsync($"api/v7/convert?q={from}_{to}&compact=ultra&apiKey=1ea33486692fa74acc21");
+
+                    var stringResult = await response.Content.ReadAsStringAsync();
+
+                    string word = stringResult.Substring(stringResult.LastIndexOf(':') + 1).Trim('}');
+
+                    return $"📊{from}: {word} $";                   
+                }
+                catch (HttpRequestException httpRequestException)
+                {
+                    Console.WriteLine(httpRequestException.StackTrace);
+                    return "Error calling API. Please do manual lookup.";
+                }
+            }
+        }
+
+        private async static void newEntry(string link, string numberBook, string pictureLink, string filePath, Telegram.Bot.Args.MessageEventArgs e)
         {
             if (numberBook != string.Empty/*&& filePath == string.Empty*/)
             {
