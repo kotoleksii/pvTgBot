@@ -9,6 +9,11 @@ using System.Text;
 using System.Xml;
 using System.Globalization;
 using System.Net.Http;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using System.Net;
+using RestSharp;
 
 namespace pvTgBot
 {
@@ -146,7 +151,8 @@ namespace pvTgBot
                     var me = _bot.GetMeAsync().Result;
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀", replyMarkup: replyKeyboardStart);
                     break;
-                case "/kurs":                  
+                case "/kurs":
+                    RequestToApi();
                     var response = $"{GetExchangeRate()}\n\n{GetExchangeRateCrypto("BTC", "USD").Result}";                 
                     await _bot.SendTextMessageAsync(e.Message.Chat.Id, response);
                     break;
@@ -186,8 +192,8 @@ namespace pvTgBot
                         }
                     }
                 }
-            }
-            return $"Актуальні курси валют:\n💵USD: {usd} ₴\n💶EUR: {eur} ₴";
+            }          
+            return $"Актуальні курси валют:\n💵USD: { Math.Round((decimal)usd, 2)} ₴\n💶EUR: { Math.Round((decimal)eur, 2)} ₴";
         }
 
         public async static Task<string> GetExchangeRateCrypto(string from, string to)
@@ -203,7 +209,7 @@ namespace pvTgBot
 
                     string word = stringResult.Substring(stringResult.LastIndexOf(':') + 1).Trim('}');
 
-                    return $"📊{from}: {word} $";                   
+                    return $"📊{from}: {Math.Round(Double.Parse(word, CultureInfo.InvariantCulture))} $";
                 }
                 catch (HttpRequestException httpRequestException)
                 {
@@ -211,6 +217,21 @@ namespace pvTgBot
                     return "Error calling API. Please do manual lookup.";
                 }
             }
+        }
+
+        public static void RequestToApi()
+        {
+            var client = new RestClient("https://api.exmo.com/v1.1/required_amount");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.AddParameter("pair", "ZEC_USD");
+            request.AddParameter("quantity", "1");
+            IRestResponse response = client.Execute(request);
+            string word = response.Content.Substring(response.Content.LastIndexOf(':') + 1).Trim('}');
+            Console.WriteLine(word);
+            Console.WriteLine(response.Content);
+
         }
 
         private async static void newEntry(string link, string numberBook, string pictureLink, string filePath, Telegram.Bot.Args.MessageEventArgs e)
