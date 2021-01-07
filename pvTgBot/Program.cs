@@ -11,6 +11,8 @@ using System.Net.Http;
 using RestSharp;
 using System.Net;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace pvTgBot
 {
@@ -78,11 +80,7 @@ namespace pvTgBot
 #endregion
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);
-                    break;
-                case "/weather":
-                    
-                    await _bot.SendTextMessageAsync(message.Chat.Id, weather("Zaporizhia").Result);                 
-                    break;
+                    break;              
                 case "👨🏼‍💻 Classwork":
                     var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
                     {
@@ -143,8 +141,34 @@ namespace pvTgBot
                     var me = _bot.GetMeAsync().Result;
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀", replyMarkup: replyKeyboardStart);
                     break;
-                case "/kurs":
+                case "/kurs":                  
                     await _bot.SendTextMessageAsync(e.Message.Chat.Id, newPostExchangeRates());
+                    break;
+                case "/mono":
+                    var maxRetryAttempts = 3;
+                    try
+                    {
+                        await RetryHelper.RetryOnExceptionAsync<HttpRequestException>
+                            (maxRetryAttempts, async () =>
+                            {
+                                string monoRef = "https://monobank.ua/r/GsbX";
+                                string monoDonate = "send.monobank.ua/jar/5JfMjg4P5K";
+                                var inlineKeyboardMono = new InlineKeyboardMarkup(new[] {
+                                    new[] { InlineKeyboardButton.WithUrl("💳 відкрити картку в 2 кліки", monoRef) },
+                                    new[] { InlineKeyboardButton.WithUrl("🐈 задонатити автору бота", monoDonate)}
+                    });
+
+                                await _bot.SendTextMessageAsync(e.Message.Chat.Id, mono().Result, replyMarkup: inlineKeyboardMono);
+                            });
+                    }
+                    catch (Exception ex)
+                    {
+                        await _bot.SendTextMessageAsync(e.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати, така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
+                        Console.WriteLine("Exception: " + ex.Message);
+                    }                                   
+                    break;
+                case "/weather":                  
+                    await _bot.SendTextMessageAsync(message.Chat.Id, weather("Zaporizhia").Result);
                     break;
                 #region
                 //case "/time":
@@ -174,24 +198,68 @@ namespace pvTgBot
 
             WeatherResponse weather = JsonConvert.DeserializeObject<WeatherResponse>(response);
 
-            string smile = "";
+            string smile = "🏙";
             if (weather.Weather[0].Description == "рвані хмари")
                 smile = "☁";
 
+            if (weather.Weather[0].Description == "туман")
+                smile = "🌁";
+
+            if (weather.Weather[0].Description == "легка злива")
+                smile = "🌧";
+
+            if (weather.Weather[0].Description == "хмарно")
+                smile = "☁";
+            
             return 
-                $"{smile} {weather.Name} - {weather.Weather[0].Description}\n" +        
-                $"🌡️ {weather.Main.Temp} °C\n\n" +
-                $"Відчуття: {weather.Main.Feels_Like} °C\n" +
+                $"{smile} {weather.Name} | {weather.Weather[0].Description}\n\n" +        
+                $"{weather.Main.Temp}° " +
+                $"(відчувається як {weather.Main.Feels_Like}°)\n" +
                 $"Вітер: {weather.Wind.Speed} м/с\n" +
                 $"Вологість: {weather.Main.Humidity} %\n" +
                 $"Тиск: {weather.Main.Pressure} hPa\n" +
                 $"{DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString()}\n";
-        }       
+        }
+
+        public async static Task<string> mono()
+        {        
+            string url = $@"https://api.monobank.ua/bank/currency";                
+
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+            string response;
+
+            using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+            {
+                response = await streamReader.ReadToEndAsync();
+            }
+
+            List<CurrencyInfo> myDeserializedObjList = (List<CurrencyInfo>)JsonConvert.DeserializeObject(response, typeof(List<CurrencyInfo>));
+
+            string USrateBuy = Math.Round(Double.Parse(myDeserializedObjList[0].RateBuy.ToString()), 2).ToString();
+            string USrateSell = Math.Round(Double.Parse(myDeserializedObjList[0].RateSell.ToString()), 2).ToString();
+
+            string EUrateBuy = Math.Round(Double.Parse(myDeserializedObjList[1].RateBuy.ToString()), 2).ToString();
+            string EUrateSell = Math.Round(Double.Parse(myDeserializedObjList[1].RateSell.ToString()), 2).ToString();
+
+            string PLrateBuy = Math.Round(Double.Parse(myDeserializedObjList[4].RateBuy.ToString()), 2).ToString();
+            string PLrateSell = Math.Round(Double.Parse(myDeserializedObjList[4].RateSell.ToString()), 2).ToString();
+
+            return 
+                $"💰Курс валют MonoBank\n" +
+                $"📅 {DateTime.Now.ToLongDateString()}\n\n" +
+                $"Валюта     Купівля     Продаж\n" +
+                $"🇺🇸{CurrencyCode.USD}      {USrateBuy}         {USrateSell}\n" +
+                $"🇪🇺{CurrencyCode.EUR}      {EUrateBuy}         {EUrateSell}\n" +
+                $"🇵🇱{CurrencyCode.PLN}      {PLrateBuy}            {PLrateSell}\n";         
+        }
 
         public static string newPostExchangeRates()
         {
-            return $"📊 Актуальні курси валют:\n\n{GetExchangeRate()}\n\n" +
-                        $"{GetExchangeDigitRate("BTC", "USD").Result}" +
+            return $"📊 Актуальні курси валют:\n\nНБУ\n{GetExchangeRate()}\n\n" +
+                $"MonoBank\n/mono\n\n" +
+                        $"EXMO\n{GetExchangeDigitRate("BTC", "USD").Result}" +
                             $"{GetExchangeDigitRate("ETH", "USD").Result}" +
                                 $"{GetExchangeDigitRate("LTC", "USD").Result}" +
                             $"{GetExchangeDigitRate("ZEC", "USD").Result}" +
@@ -382,5 +450,59 @@ namespace pvTgBot
         //        }
         //    }
         //}
+        public static class RetryHelper
+        {
+            public static async Task RetryOnExceptionAsync(int maxRetryAttempts, Func<Task> operation)
+            {
+                await RetryOnExceptionAsync<Exception>(maxRetryAttempts, operation);
+            }
+
+            public static async Task RetryOnExceptionAsync<TException>(int maxRetryAttempts, Func<Task> operation) where TException : Exception
+            {
+                if (maxRetryAttempts <= 0)
+                    throw new ArgumentOutOfRangeException(nameof(maxRetryAttempts));
+
+                var retryattempts = 0;
+                do
+                {
+                    try
+                    {
+                        retryattempts++;
+                        await operation();
+                        break;
+                    }
+                    catch (TException ex)
+                    {
+                        if (retryattempts == maxRetryAttempts)
+                            throw;
+
+                        await CreateRetryDelayForException(maxRetryAttempts, retryattempts, ex);
+                    }
+                } while (true);
+            }
+
+            private static Task CreateRetryDelayForException(int maxRetryAttempts, int attempts, Exception ex)
+            {
+                int delay = IncreasingDelayInSeconds(attempts);
+                Console.WriteLine("Attempt {0} of {1} failed. New retry after {2} seconds.", attempts.ToString(), maxRetryAttempts.ToString(), delay.ToString());
+                return Task.Delay(delay);
+            }
+
+            internal static int[] DelayPerAttemptInSeconds =
+            {
+            (int) TimeSpan.FromSeconds(5).TotalSeconds,
+            (int) TimeSpan.FromSeconds(30).TotalSeconds,
+            (int) TimeSpan.FromMinutes(3).TotalSeconds,
+            (int) TimeSpan.FromMinutes(10).TotalSeconds,
+            (int) TimeSpan.FromMinutes(30).TotalSeconds
+        };
+
+            static int IncreasingDelayInSeconds(int failedAttempts)
+            {
+                if (failedAttempts <= 0) throw new ArgumentOutOfRangeException();
+
+                return failedAttempts >= DelayPerAttemptInSeconds.Length ? DelayPerAttemptInSeconds.Last() : DelayPerAttemptInSeconds[failedAttempts];
+            }
+        }
     }
 }
