@@ -5,14 +5,9 @@ using Telegram.Bot.Types.ReplyMarkups;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text;
-using System.Xml;
-using System.Globalization;
 using System.Net.Http;
-using RestSharp;
-using System.Net;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using System.Linq;
+using pvTgBot.Services;
 
 namespace pvTgBot
 {
@@ -82,22 +77,17 @@ namespace pvTgBot
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);
                     break;              
                 case "👨🏼‍💻 Classwork":
-                    var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
-                    {
-                        new [] { new KeyboardButton("ADO.net") },
-                        new [] { new KeyboardButton("🔙 Back") }                       
-                    }, true);
-                    await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);                 
+                    //var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
+                    //{
+                    //    new [] { new KeyboardButton("ADO.net") },
+                    //    new [] { new KeyboardButton("🔙 Back") }                       
+                    //}, true);
+                    //await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);  
+
+                    adoNETcwCase(pictureUrl, e);
                     break;
                 case "ADO.net":
-                    var link1 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
-                    var link2 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
-
-                    var inlineKeyboard = new InlineKeyboardMarkup(new[] {
-                        new[] { InlineKeyboardButton.WithUrl("1️⃣ intro (01.12.2020)", link1) },
-                        new[] { InlineKeyboardButton.WithUrl("2️⃣ detached (03.12.2020)", link2) }
-                    });
-                    await _bot.SendPhotoAsync(message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
+                    adoNETcwCase(pictureUrl, e);
                     break;
                 case "📖 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
@@ -139,36 +129,17 @@ namespace pvTgBot
                         new[] { new KeyboardButton("Start 🚀") },
                     }, true);
                     var me = _bot.GetMeAsync().Result;
-                    await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀", replyMarkup: replyKeyboardStart);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀",
+                        replyMarkup: replyKeyboardStart);
                     break;
                 case "/kurs":                  
                     await _bot.SendTextMessageAsync(e.Message.Chat.Id, newPostExchangeRates());
                     break;
                 case "/mono":
-                    var maxRetryAttempts = 3;
-                    try
-                    {
-                        await RetryHelper.RetryOnExceptionAsync<HttpRequestException>
-                            (maxRetryAttempts, async () =>
-                            {
-                                string monoRef = "https://monobank.ua/r/GsbX";
-                                string monoDonate = "send.monobank.ua/jar/5JfMjg4P5K";
-                                var inlineKeyboardMono = new InlineKeyboardMarkup(new[] {
-                                    new[] { InlineKeyboardButton.WithUrl("💳 відкрити картку в 2 кліки", monoRef) },
-                                    new[] { InlineKeyboardButton.WithUrl("🐈 задонатити автору бота", monoDonate)}
-                    });
-
-                                await _bot.SendTextMessageAsync(e.Message.Chat.Id, mono().Result, replyMarkup: inlineKeyboardMono);
-                            });
-                    }
-                    catch (Exception ex)
-                    {
-                        await _bot.SendTextMessageAsync(e.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати, така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
-                        Console.WriteLine("Exception: " + ex.Message);
-                    }                                   
+                    monoCase(e);                   
                     break;
                 case "/weather":                  
-                    await _bot.SendTextMessageAsync(message.Chat.Id, weather("Zaporizhia").Result);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, WeatherAPI.GetWeather("Zaporizhia").Result);
                     break;
                 #region
                 //case "/time":
@@ -180,133 +151,58 @@ namespace pvTgBot
                     await _bot.SendStickerAsync(message.Chat.Id, stickersErr());          
                     break;
             }
-        }
+        }     
 
-        public async static Task<string> weather(string city)
+        private async static void adoNETcwCase(string pictureUrl,Telegram.Bot.Args.MessageEventArgs e)
         {
-            string url = $@"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=c9beb94d133fd77596790d7f7d1c3fcf&lang=ua";
+            var link1 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
+            var link2 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
 
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-            string response;
-
-            using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-            {
-                response = await streamReader.ReadToEndAsync();
-            }
-
-            WeatherResponse weather = JsonConvert.DeserializeObject<WeatherResponse>(response);
-
-            string smile = "🏙";
-            if (weather.Weather[0].Description == "рвані хмари")
-                smile = "☁";
-
-            if (weather.Weather[0].Description == "туман")
-                smile = "🌁";
-
-            if (weather.Weather[0].Description == "легка злива")
-                smile = "🌧";
-
-            if (weather.Weather[0].Description == "хмарно")
-                smile = "☁";
-            
-            return 
-                $"{smile} {weather.Name} | {weather.Weather[0].Description}\n\n" +        
-                $"{weather.Main.Temp}° " +
-                $"(відчувається як {weather.Main.Feels_Like}°)\n" +
-                $"Вітер: {weather.Wind.Speed} м/с\n" +
-                $"Вологість: {weather.Main.Humidity} %\n" +
-                $"Тиск: {weather.Main.Pressure} hPa\n" +
-                $"{DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString()}\n";
+            var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                new[] { InlineKeyboardButton.WithUrl("1️⃣ intro (01.12.2020)", link1) },
+                new[] { InlineKeyboardButton.WithUrl("2️⃣ detached (03.12.2020)", link2) }
+            });
+            await _bot.SendPhotoAsync(e.Message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
         }
 
-        public async static Task<string> mono()
-        {        
-            string url = $@"https://api.monobank.ua/bank/currency";                
-
-            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-            string response;
-
-            using (StreamReader streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
-            {
-                response = await streamReader.ReadToEndAsync();
-            }
-
-            List<CurrencyInfo> myDeserializedObjList = (List<CurrencyInfo>)JsonConvert.DeserializeObject(response, typeof(List<CurrencyInfo>));
-
-            string USrateBuy = Math.Round(Double.Parse(myDeserializedObjList[0].RateBuy.ToString()), 2).ToString();
-            string USrateSell = Math.Round(Double.Parse(myDeserializedObjList[0].RateSell.ToString()), 2).ToString();
-
-            string EUrateBuy = Math.Round(Double.Parse(myDeserializedObjList[1].RateBuy.ToString()), 2).ToString();
-            string EUrateSell = Math.Round(Double.Parse(myDeserializedObjList[1].RateSell.ToString()), 2).ToString();
-
-            string PLrateBuy = Math.Round(Double.Parse(myDeserializedObjList[4].RateBuy.ToString()), 2).ToString();
-            string PLrateSell = Math.Round(Double.Parse(myDeserializedObjList[4].RateSell.ToString()), 2).ToString();
-
-            return 
-                $"💰Курс валют MonoBank\n" +
-                $"📅 {DateTime.Now.ToLongDateString()}\n\n" +
-                $"Валюта     Купівля     Продаж\n" +
-                $"🇺🇸{CurrencyCode.USD}      {USrateBuy}         {USrateSell}\n" +
-                $"🇪🇺{CurrencyCode.EUR}      {EUrateBuy}         {EUrateSell}\n" +
-                $"🇵🇱{CurrencyCode.PLN}      {PLrateBuy}            {PLrateSell}\n";         
-        }
-
-        public static string newPostExchangeRates()
+        private async static void monoCase(Telegram.Bot.Args.MessageEventArgs e)
         {
-            return $"📊 Актуальні курси валют:\n\nНБУ\n{GetExchangeRate()}\n\n" +
-                $"MonoBank\n/mono\n\n" +
-                        $"EXMO\n{GetExchangeDigitRate("BTC", "USD").Result}" +
-                            $"{GetExchangeDigitRate("ETH", "USD").Result}" +
-                                $"{GetExchangeDigitRate("LTC", "USD").Result}" +
-                            $"{GetExchangeDigitRate("ZEC", "USD").Result}" +
-                        $"{GetExchangeDigitRate("XRP", "USD").Result}";
-        }
+            var maxRetryAttempts = 3;           
 
-        public static string GetExchangeRate()
-        {
-            decimal? usd = null, eur = null;
-            using (XmlTextReader reader = new XmlTextReader("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange"))
-            {
-                while (reader.ReadToFollowing("rate"))
-                {
-                    decimal rate = decimal.Parse(reader.ReadElementContentAsString(), CultureInfo.InvariantCulture);
-                    if (reader.ReadToFollowing("cc"))
-                    {
-                        switch (reader.ReadElementContentAsString())
-                        {
-                            case "USD": usd = rate; break;
-                            case "EUR": eur = rate; break;
-                        }
-                    }
-                }
-            }          
-            return $"💵USD: { Math.Round((decimal)usd, 2)} ₴\n💶EUR: { Math.Round((decimal)eur, 2)} ₴";
-        }
-
-        public async static Task<string> GetExchangeDigitRate(string from, string to)
-        {
             try
             {
-                var client = new RestClient("https://api.exmo.com/v1.1/required_amount");
-                client.Timeout = -1;
-                var request = new RestRequest(Method.POST);
-                request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-                request.AddParameter("pair", $"{from}_{to}");
-                request.AddParameter("quantity", "1");
-                IRestResponse response = await client.ExecuteAsync(request);
-                string word = response.Content.Substring(response.Content.LastIndexOf(':') + 1).Trim(new Char[] { '}', '"' });
-                return $"{from}: { Math.Round(Double.Parse(word, CultureInfo.InvariantCulture), 2)} $\n";
+                await RetryHelper.RetryOnExceptionAsync<HttpRequestException>
+                    (maxRetryAttempts, async () =>
+                    {
+                        string monoLink = "https://psm7.com/awards-2020/wp-content/uploads/2020/11/1604584696-image-480x230-c-default.png";
+                        string monoRef = "https://monobank.ua/r/GsbX";
+                        string monoDonate = "send.monobank.ua/jar/5JfMjg4P5K";
+                        var inlineKeyboardMono = new InlineKeyboardMarkup(new[] {
+                                    new[] { InlineKeyboardButton.WithUrl("💳 відкрити картку в 2 кліки", monoRef) },
+                                    new[] { InlineKeyboardButton.WithUrl("🐈 задонатити автору бота", monoDonate)}
+                        });
+                        await _bot.SendPhotoAsync(e.Message.Chat.Id, monoLink,
+                            MonoBankCurrencyAPI.GetMonoExchangeRate().Result, replyMarkup: inlineKeyboardMono);
+                        //await _bot.SendTextMessageAsync(e.Message.Chat.Id, mono().Result, replyMarkup: inlineKeyboardMono);
+                    });
             }
-            catch (HttpRequestException httpRequestException)
+            catch (Exception ex)
             {
-                Console.WriteLine(httpRequestException.StackTrace);
-                return "Error calling API. Please do manual lookup.";
+                await _bot.SendTextMessageAsync(e.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати," +
+                    " така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
+                Console.WriteLine("Exception: " + ex.Message);
             }
-
+        }       
+        
+        public static string newPostExchangeRates()
+        {
+            return $"📊 Актуальні курси валют:\n\nНБУ\n{NBUCurrencyAPI.GetExchangeRateNBU()}\n\n" +
+                $"MonoBank\n/mono\n\n" +
+                        $"EXMO\n{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("BTC", "USD").Result}" +
+                            $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ETH", "USD").Result}" +
+                                $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("LTC", "USD").Result}" +
+                            $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ZEC", "USD").Result}" +
+                        $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("XRP", "USD").Result}";
         }
 
         private async static void newPostMystat(string link, string numberBook, string pictureLink, string filePath, Telegram.Bot.Args.MessageEventArgs e)
@@ -340,8 +236,7 @@ namespace pvTgBot
                     await _bot.SendTextMessageAsync(e.Message.Chat.Id, fileName, replyMarkup: inlineKeyboard);
                 else
                     await _bot.SendPhotoAsync(e.Message.Chat.Id, pictureLink, fileName, replyMarkup: inlineKeyboard);
-            }
-            
+            }      
         }           
 
         private static string GetFilenameFromWebServer(string url)
@@ -371,12 +266,11 @@ namespace pvTgBot
 
         private static string stickersErr()
         {
-            string[] stickers = new string[] { "CAACAgIAAxkBAAKe11_wucfsL89gl0A3dmym3ifNsdpJAALIjQACY4tGDHjHpsKiUIbZHgQ",
-                        "CAACAgIAAxkBAAKe2l_wuqLp7KrmkHrLffW1AamtC1b5AAKFEQACPLPFB9QtAAFHuClv0x4E",
-                    "CAACAgIAAxkBAAKe3V_wvT_0SoSQXsorY1z71DllxJX2AAKQEQACPLPFB_LLZcaKbmyGHgQ",
+            string[] stickers = new string[] { 
+                        "CAACAgIAAxkBAAKe2l_wuqLp7KrmkHrLffW1AamtC1b5AAKFEQACPLPFB9QtAAFHuClv0x4E",                  
                     "CAACAgIAAxkBAAKe4F_wvXckhsdicvTp52ake9PSL-IzAAK0jQACY4tGDB_-KlQJwUFhHgQ",
-                    "CAACAgIAAxkBAAKe41_wva3XnNWfUUY4qpAr1TB2sn_qAAIDjgACY4tGDLVBmwhgjPuuHgQ"
-                    };
+                "CAACAgIAAxkBAAKe41_wva3XnNWfUUY4qpAr1TB2sn_qAAIDjgACY4tGDLVBmwhgjPuuHgQ"
+            };
             int i = _rnd.Next(0, stickers.Length);
             return stickers[i];
         }
