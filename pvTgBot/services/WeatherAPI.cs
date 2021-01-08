@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -73,12 +74,12 @@ namespace pvTgBot.Services
 
             return
                 $"{smile} {weather.Name} | {weather.Weather[0].Description}\n\n" +
-                $"{weather.Main.Temp}° " +
+                $"🌡 {weather.Main.Temp}° " +
                 $"(відчувається як {weather.Main.Feels_Like}°)\n" +
-                $"Вітер: {weather.Wind.Speed} м/с\n" +
-                $"Вологість: {weather.Main.Humidity} %\n" +
-                $"Тиск: {weather.Main.Pressure} hPa\n"; //+
-                //$"{DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString()}\n";
+                $"🌬 {weather.Wind.Speed} м/с\n" +
+                $"💧 {weather.Main.Humidity} %\n" +
+                $"🧘🏻‍♂️ {weather.Main.Pressure} hPa\n\n" +
+                $"🗓 {DateTime.Now.ToLongDateString() + " | " + DateTime.Now.ToLongTimeString()}\n";
         }
     }
 }

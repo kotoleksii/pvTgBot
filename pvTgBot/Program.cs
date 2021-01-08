@@ -178,8 +178,8 @@ namespace pvTgBot
                         string monoRef = "https://monobank.ua/r/GsbX";
                         string monoDonate = "send.monobank.ua/jar/5JfMjg4P5K";
                         var inlineKeyboardMono = new InlineKeyboardMarkup(new[] {
-                                    new[] { InlineKeyboardButton.WithUrl("💳 відкрити картку в 2 кліки", monoRef) },
-                                    new[] { InlineKeyboardButton.WithUrl("🐈 задонатити автору бота", monoDonate)}
+                                    new[] { InlineKeyboardButton.WithUrl("💳 отримати картку в 2 кліки", monoRef) },
+                                    new[] { InlineKeyboardButton.WithUrl("🐈 підтримати автора бота", monoDonate)}
                         });
                         await _bot.SendPhotoAsync(e.Message.Chat.Id, monoLink,
                             MonoBankCurrencyAPI.GetMonoExchangeRate().Result, replyMarkup: inlineKeyboardMono);
