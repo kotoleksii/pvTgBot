@@ -52,7 +52,7 @@ namespace pvTgBot
 
             Console.WriteLine(logs);
 
-            File.AppendAllText("logs.txt", logs + "\n");
+            File.AppendAllText("logs.txt", DateTime.Now +"\t"+ logs + "\n");
 
 
             switch (message.Text)
@@ -200,7 +200,7 @@ namespace pvTgBot
                 await _bot.SendTextMessageAsync(e.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати," +
                     " така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
                 Console.WriteLine("Exception: " + ex.Message);
-                File.AppendAllText("logs.txt", "Exception: " + ex.Message + "\n");
+                File.AppendAllText("logs.txt", DateTime.Now + "\t" + "Exception: " + ex.Message + "\n");
             }
         }       
         
