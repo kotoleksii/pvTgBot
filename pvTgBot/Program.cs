@@ -52,8 +52,7 @@ namespace pvTgBot
 
             Console.WriteLine(logs);
 
-            File.AppendAllText("logs.txt", DateTime.Now +"\t"+ logs + "\n");
-
+            File.AppendAllText("logs.txt", DateTime.Now + "\t" + logs + "\n");
 
             switch (message.Text)
             {                          
