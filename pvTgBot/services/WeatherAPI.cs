@@ -60,16 +60,17 @@ namespace pvTgBot.Services
 
             string smile = "🏙";
 
-            if (weather.Weather[0].Description == "рвані хмари")
+            if (weather.Weather[0].Description == "рвані хмари" ||
+                weather.Weather[0].Description == "хмарно")
                 smile = "☁";
             if (weather.Weather[0].Description == "туман")
                 smile = "🌁";
             if (weather.Weather[0].Description == "легка злива")
                 smile = "🌧";
-            if (weather.Weather[0].Description == "хмарно")
-                smile = "☁";
             if (weather.Weather[0].Description == "чисте небо")
                 smile = "☀";
+            if (weather.Weather[0].Description == "димка")
+                smile = "🌫";
 
 
             return

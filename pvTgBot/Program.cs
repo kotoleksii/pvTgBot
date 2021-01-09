@@ -8,6 +8,7 @@ using System.Text;
 using System.Net.Http;
 using System.Linq;
 using pvTgBot.Services;
+using System.Net;
 
 namespace pvTgBot
 {
@@ -22,20 +23,20 @@ namespace pvTgBot
             _wc = new System.Net.WebClient();
             _wc.Encoding = Encoding.UTF8;
 
-            _rnd = new Random();
+            _rnd = new Random();          
 
             _bot = new TelegramBotClient("1466263903:AAH11p2p6Ha3NB44GPkgN1_6fslGiz-8IJc");
 
             _bot.OnMessage += BotOnMessageReceived;
             //_bot.OnCallbackQuery += BotOnCallBackQueryReceived;
-       
+
             var me = _bot.GetMeAsync().Result;
 
             Console.WriteLine(me.FirstName);
 
             _bot.StartReceiving();
             Console.ReadLine();
-            _bot.StopReceiving();                 
+            _bot.StopReceiving();          
         }     
 
         private async static void BotOnMessageReceived(object sender, Telegram.Bot.Args.MessageEventArgs e)
@@ -138,6 +139,11 @@ namespace pvTgBot
                 case "/mono":
                     monoCase(e);                   
                     break;
+                case "/privat":
+                    string privatLink = "https://privatbank.ua/uploads/media/default/0001/14/a6507601ef7e311f4d5af21ea9b8e0ce69105850.png";
+                    await _bot.SendPhotoAsync(e.Message.Chat.Id, privatLink,
+                            PrivatCurrencyAPI.GetPrivatExchangeRate().Result + "\n👇🏻 підтримати автора бота\n📑 4149 4991 1185 5175");
+                    break;
                 case "/weather":                  
                     await _bot.SendTextMessageAsync(message.Chat.Id, WeatherAPI.GetWeather("Zaporizhia").Result);
                     break;
@@ -197,7 +203,8 @@ namespace pvTgBot
         public static string newPostExchangeRates()
         {
             return $"📊 Актуальні курси валют:\n\nНБУ\n{NBUCurrencyAPI.GetExchangeRateNBU()}\n\n" +
-                $"MonoBank\n/mono\n\n" +
+                $"/mono  MonoBank\n" +
+                $"/privat  ПриватБанк\n\n" +
                         $"EXMO\n{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("BTC", "USD").Result}" +
                             $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ETH", "USD").Result}" +
                                 $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("LTC", "USD").Result}" +
