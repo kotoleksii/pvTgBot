@@ -8,7 +8,6 @@ using System.Text;
 using System.Net.Http;
 using System.Linq;
 using pvTgBot.Services;
-using System.Net;
 
 namespace pvTgBot
 {
@@ -23,7 +22,7 @@ namespace pvTgBot
             _wc = new System.Net.WebClient();
             _wc.Encoding = Encoding.UTF8;
 
-            _rnd = new Random();          
+            _rnd = new Random();
 
             _bot = new TelegramBotClient("1466263903:AAH11p2p6Ha3NB44GPkgN1_6fslGiz-8IJc");
 
@@ -36,7 +35,7 @@ namespace pvTgBot
 
             _bot.StartReceiving();
             Console.ReadLine();
-            _bot.StopReceiving();          
+            _bot.StopReceiving();               
         }     
 
         private async static void BotOnMessageReceived(object sender, Telegram.Bot.Args.MessageEventArgs e)
@@ -49,8 +48,12 @@ namespace pvTgBot
                 return;
 
             string name = $"{message.From.FirstName} {message.From.LastName}";
+            string logs = $"{name} send message: '{message.Text}'";
 
-            Console.WriteLine($"{name} send message: '{message.Text}'");
+            Console.WriteLine(logs);
+
+            File.AppendAllText("logs.txt", logs + "\n");
+
 
             switch (message.Text)
             {                          
@@ -197,6 +200,7 @@ namespace pvTgBot
                 await _bot.SendTextMessageAsync(e.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати," +
                     " така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
                 Console.WriteLine("Exception: " + ex.Message);
+                File.AppendAllText("logs.txt", "Exception: " + ex.Message + "\n");
             }
         }       
         
