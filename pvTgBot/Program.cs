@@ -48,11 +48,13 @@ namespace pvTgBot
                 return;
 
             string name = $"{message.From.FirstName} {message.From.LastName}";
-            string logs = $"{name} send message: '{message.Text}'";
+            //string logText = $"{name} send message: '{message.Text}'";     
+            string logText = $"{DateTime.Now.ToShortTimeString()}\t{ name} send message: '{message.Text}'";       
+            string logFileName = $"{DateTime.Now.ToShortDateString()}.txt";
 
-            Console.WriteLine(logs);
-
-            File.AppendAllText("logs.txt", DateTime.Now + "\t" + logs + "\n");
+            Console.WriteLine(logText);
+                 
+            File.AppendAllText(logFileName, logText + "\n");
 
             switch (message.Text)
             {                          
@@ -159,7 +161,7 @@ namespace pvTgBot
                     await _bot.SendStickerAsync(message.Chat.Id, stickersErr());          
                     break;
             }
-        }     
+        }       
 
         private async static void adoNETcwCase(string pictureUrl,Telegram.Bot.Args.MessageEventArgs e)
         {
@@ -198,8 +200,13 @@ namespace pvTgBot
             {
                 await _bot.SendTextMessageAsync(e.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати," +
                     " така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
-                Console.WriteLine("Exception: " + ex.Message);
-                File.AppendAllText("logs.txt", DateTime.Now + "\t" + "Exception: " + ex.Message + "\n");
+
+                string logText = $"{DateTime.Now.ToShortTimeString()}\tException: { ex.Message}";
+                Console.WriteLine(logText);
+
+                string logFileName = $"{DateTime.Now.ToShortDateString()}.txt";
+               
+                File.AppendAllText(logFileName, logText + "\n");             
             }
         }       
         
