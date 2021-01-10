@@ -19,22 +19,22 @@ namespace pvTgBot.Services
 
     public class PrivatCurrencyAPI
     {
-        private static HttpWebRequest httpWebRequest;
-        private static HttpWebResponse httpWebResponse;
-        private static StreamReader streamReader;
+        private static HttpWebRequest _httpWebRequest;
+        private static HttpWebResponse _httpWebResponse;
+        private static StreamReader _streamReader;
 
         public async static Task<string> GetPrivatExchangeRate()
         {
             string url = $@"https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
 
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            _httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            _httpWebResponse = (HttpWebResponse)_httpWebRequest.GetResponse();
 
             string response;
 
-            using (streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+            using (_streamReader = new StreamReader(_httpWebResponse.GetResponseStream()))
             {
-                response = await streamReader.ReadToEndAsync();
+                response = await _streamReader.ReadToEndAsync();
             }         
 
             List<PrivatCurrencyInfo> myDeserializedObjList =
@@ -42,12 +42,12 @@ namespace pvTgBot.Services
 
 
             string USD = myDeserializedObjList[0].ccy;
-            string USrateBuy = Math.Round(float.Parse(myDeserializedObjList[0].buy.ToString()), 2).ToString();
-            string USrateSell = Math.Round(float.Parse(myDeserializedObjList[0].sale.ToString()), 2).ToString();
+            string USrateBuy = Math.Round(float.Parse(myDeserializedObjList[0].buy.ToString()), 2).ToString("0.00");
+            string USrateSell = Math.Round(float.Parse(myDeserializedObjList[0].sale.ToString()), 2).ToString("0.00");
 
             string EUR = myDeserializedObjList[1].ccy;
-            string EUrateBuy = Math.Round(float.Parse(myDeserializedObjList[1].buy.ToString()), 2).ToString();
-            string EUrateSell = Math.Round(float.Parse(myDeserializedObjList[1].sale.ToString()), 2).ToString();
+            string EUrateBuy = Math.Round(float.Parse(myDeserializedObjList[1].buy.ToString()), 2).ToString("0.00");
+            string EUrateSell = Math.Round(float.Parse(myDeserializedObjList[1].sale.ToString()), 2).ToString("0.00");
 
             string BTC = myDeserializedObjList[3].ccy;
             string BTCrateBuy = Math.Round(float.Parse(myDeserializedObjList[3].buy.ToString())).ToString();

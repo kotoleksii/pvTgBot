@@ -8,6 +8,8 @@ using System.Text;
 using System.Net.Http;
 using System.Linq;
 using pvTgBot.Services;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace pvTgBot
 {
@@ -18,7 +20,7 @@ namespace pvTgBot
         private static Random _rnd;
 
         static void Main(string[] args)
-        {
+        {          
             _wc = new System.Net.WebClient();
             _wc.Encoding = Encoding.UTF8;
 
@@ -105,11 +107,11 @@ namespace pvTgBot
                     break;
                 case "📗 ADO.net #1":
                     string bookLink1 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";                 
-                    newPostMystat(bookLink1, "1", pictureUrl, "", e);
+                    GetPostMystat(bookLink1, "1", pictureUrl, "", e);
                     break;
                 case "📗 ADO.net #2":
                     string bookLink2 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";
-                    newPostMystat(bookLink2, "2", pictureUrl, "", e);                   
+                    GetPostMystat(bookLink2, "2", pictureUrl, "", e);                   
                     break;
                 case "📚 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
@@ -122,11 +124,11 @@ namespace pvTgBot
                     break;
                 case "📄 Homework #1":
                     string textLink1 = "https://fsx1.itstep.org/api/v1/files/67SquyJh0Lzhvwbo2V6a60AaFdswwxiw";
-                    newPostMystat(textLink1, "", "", "", e);
+                    GetPostMystat(textLink1, "", "", "", e);
                     break;
                 case "📄 Homework #2":
                     string textLink2 = "https://fsx1.itstep.org/api/v1/files/924Db9acPdOya-65NwQk71c0sNyfyh_3";
-                    newPostMystat(textLink2, "", pictureUrl, "", e);
+                    GetPostMystat(textLink2, "", pictureUrl, "", e);
                     break;
                 case "🚪 Exit":
                     var replyKeyboardStart = new ReplyKeyboardMarkup(new[]
@@ -138,7 +140,7 @@ namespace pvTgBot
                         replyMarkup: replyKeyboardStart);
                     break;
                 case "/kurs":                  
-                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, newPostExchangeRates());
+                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, GetPostExchangeRates());
                     break;
                 case "/mono":
                     monoCase(e);                   
@@ -150,6 +152,10 @@ namespace pvTgBot
                     break;
                 case "/weather":                  
                     await _bot.SendTextMessageAsync(message.Chat.Id, WeatherAPI.GetWeather("Zaporizhia").Result);
+                    break;
+                case "/news":
+                    string logo = "https://www.radiosvoboda.org/Content/responsive/RFE/uk-UA/img/logo.png";                   
+                    await _bot.SendPhotoAsync(message.Chat.Id, logo, GetPostNews(), ParseMode.Html);
                     break;
                 #region
                 //case "/time":
@@ -210,7 +216,7 @@ namespace pvTgBot
             }
         }       
         
-        public static string newPostExchangeRates()
+        public static string GetPostExchangeRates()
         {
             return $"📊 Актуальні курси валют:\n\nНБУ\n{NBUCurrencyAPI.GetExchangeRateNBU()}\n\n" +
                 $"/mono  MonoBank\n" +
@@ -220,9 +226,23 @@ namespace pvTgBot
                                 $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("LTC", "USD").Result}" +
                             $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ZEC", "USD").Result}" +
                         $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("XRP", "USD").Result}";
+        }              
+
+        public static string GetPostNews()
+        {         
+            var full = new List<string>
+                    {"🔥 Головне за день в Україні та світі\n\n",
+                        $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[0].Link}", $"{RSS.GetLatestFivePosts().ToList()[0].Title}")}",
+                                $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[1].Link}", $"{RSS.GetLatestFivePosts().ToList()[1].Title}")}",
+                                            $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[2].Link}", $"{RSS.GetLatestFivePosts().ToList()[2].Title}")}",
+                                    $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[3].Link}", $"{RSS.GetLatestFivePosts().ToList()[3].Title}")}",
+                            $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[4].Link}", $"{RSS.GetLatestFivePosts().ToList()[4].Title}")}"
+                    };
+
+            return string.Join(" ", full);         
         }
 
-        private async static void newPostMystat(string link, string numberBook, string pictureLink, string filePath, Telegram.Bot.Args.MessageEventArgs e)
+        private async static void GetPostMystat(string link, string numberBook, string pictureLink, string filePath, Telegram.Bot.Args.MessageEventArgs e)
         {
             if (numberBook != string.Empty/*&& filePath == string.Empty*/)
             {
@@ -273,6 +293,19 @@ namespace pvTgBot
             return result;
         }
 
+        public static string GetHyperLink(string link, string text)
+        {
+            Regex regex = new Regex(@"(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?");
+
+            MatchCollection matches = regex.Matches(link);
+            if (matches.Count > 0)
+            {
+                foreach (Match match in matches)
+                    link = link.Replace(match.Value, "<a href=\"" + match.Value + "\">" + text + "</a>");
+            }
+            return link;
+        }
+
         private static async Task writeFileAsync(string path, string fileName)
         {
             using (StreamWriter sw = new StreamWriter(path, false))
@@ -290,7 +323,7 @@ namespace pvTgBot
             };
             int i = _rnd.Next(0, stickers.Length);
             return stickers[i];
-        }
+        }       
 
         //private async static void BotOnCallBackQueryReceived(object sender, CallbackQueryEventArgs e)
         //{

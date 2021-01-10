@@ -66,14 +66,14 @@ namespace pvTgBot.Services
             List<CurrencyInfo> myDeserializedObjList =
                 (List<CurrencyInfo>)JsonConvert.DeserializeObject(response, typeof(List<CurrencyInfo>));
 
-            string USrateBuy = Math.Round(float.Parse(myDeserializedObjList[0].RateBuy.ToString()), 2).ToString();
-            string USrateSell = Math.Round(float.Parse(myDeserializedObjList[0].RateSell.ToString()), 2).ToString();
+            string USrateBuy = Math.Round(float.Parse(myDeserializedObjList[0].RateBuy.ToString()), 2).ToString("0.00");
+            string USrateSell = Math.Round(float.Parse(myDeserializedObjList[0].RateSell.ToString()), 2).ToString("0.00");
 
-            string EUrateBuy = Math.Round(float.Parse(myDeserializedObjList[1].RateBuy.ToString()), 2).ToString();
-            string EUrateSell = Math.Round(float.Parse(myDeserializedObjList[1].RateSell.ToString()), 2).ToString();
+            string EUrateBuy = Math.Round(float.Parse(myDeserializedObjList[1].RateBuy.ToString()), 2).ToString("0.00");
+            string EUrateSell = Math.Round(float.Parse(myDeserializedObjList[1].RateSell.ToString()), 2).ToString("0.00");
 
-            string PLrateBuy = Math.Round(float.Parse(myDeserializedObjList[4].RateBuy.ToString()), 2).ToString();
-            string PLrateSell = Math.Round(float.Parse(myDeserializedObjList[4].RateSell.ToString()), 2).ToString();
+            string PLrateBuy = Math.Round(float.Parse(myDeserializedObjList[4].RateBuy.ToString()), 2).ToString("0.00");
+            string PLrateSell = Math.Round(float.Parse(myDeserializedObjList[4].RateSell.ToString()), 2).ToString("0.00");
 
             return
                 //$"💰Курс валют MonoBank\n" +
