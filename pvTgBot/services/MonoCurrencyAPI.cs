@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace pvTgBot.Services
 {
-    public enum CurrencyCode
+    public enum MonoCurrencyCode
     {
         BYN = 933,
         CAD = 124,
@@ -24,7 +24,7 @@ namespace pvTgBot.Services
         USD = 840
     }
 
-    public class CurrencyInfo
+    public class MonoCurrencyInfo
     {
         public int CurrencyCodeA { get; set; }
         public int CurrencyCodeB { get; set; }
@@ -33,38 +33,38 @@ namespace pvTgBot.Services
         public float RateCross { get; set; }
     }
 
-    public class CurrencyResponse
+    public class MonoCurrencyResponse
     {
-        public CurrencyInfo[] Currencies { get; set; }      
+        public MonoCurrencyInfo[] Currencies { get; set; }      
     }
 
-    public class Error
+    public class MonoError
     {        
         public string Description { get; set; }
     }
 
     public class MonoBankCurrencyAPI
     {
-        private static HttpWebRequest httpWebRequest;
-        private static HttpWebResponse httpWebResponse;
-        private static StreamReader streamReader;
+        private static HttpWebRequest _httpWebRequest;
+        private static HttpWebResponse _httpWebResponse;
+        private static StreamReader _streamReader;
 
         public async static Task<string> GetMonoExchangeRate()
         {
             string url = $@"https://api.monobank.ua/bank/currency";
 
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            _httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            _httpWebResponse = (HttpWebResponse)_httpWebRequest.GetResponse();
 
             string response;
 
-            using (streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+            using (_streamReader = new StreamReader(_httpWebResponse.GetResponseStream()))
             {
-                response = await streamReader.ReadToEndAsync();
+                response = await _streamReader.ReadToEndAsync();
             }
 
-            List<CurrencyInfo> myDeserializedObjList =
-                (List<CurrencyInfo>)JsonConvert.DeserializeObject(response, typeof(List<CurrencyInfo>));
+            List<MonoCurrencyInfo> myDeserializedObjList =
+                (List<MonoCurrencyInfo>)JsonConvert.DeserializeObject(response, typeof(List<MonoCurrencyInfo>));
 
             string USrateBuy = Math.Round(float.Parse(myDeserializedObjList[0].RateBuy.ToString()), 2).ToString("0.00");
             string USrateSell = Math.Round(float.Parse(myDeserializedObjList[0].RateSell.ToString()), 2).ToString("0.00");
@@ -79,9 +79,9 @@ namespace pvTgBot.Services
                 //$"💰Курс валют MonoBank\n" +
                 $"🗓 {DateTime.Now.ToLongDateString()}\n\n" +
                 $"Валюта     Купівля     Продаж\n" +
-                $"🇺🇸{CurrencyCode.USD}       {USrateBuy}         {USrateSell}\n" +
-                $"🇪🇺{CurrencyCode.EUR}       {EUrateBuy}         {EUrateSell}\n" +
-                $"🇵🇱{CurrencyCode.PLN}       {PLrateBuy}            {PLrateSell}\n";
+                $"🇺🇸{MonoCurrencyCode.USD}       {USrateBuy}         {USrateSell}\n" +
+                $"🇪🇺{MonoCurrencyCode.EUR}       {EUrateBuy}         {EUrateSell}\n" +
+                $"🇵🇱{MonoCurrencyCode.PLN}       {PLrateBuy}            {PLrateSell}\n";
         }
     }
 }

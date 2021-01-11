@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text;
 using System.Net.Http;
-using System.Linq;
 using pvTgBot.Services;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace pvTgBot
 {
@@ -56,7 +53,7 @@ namespace pvTgBot
 
             Console.WriteLine(logText);
                  
-            File.AppendAllText(logFileName, logText + "\n");
+            File.AppendAllText(logFileName, logText + "\n");                    
 
             switch (message.Text)
             {                          
@@ -91,10 +88,10 @@ namespace pvTgBot
                     //}, true);
                     //await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);  
 
-                    adoNETcwCase(pictureUrl, e);
+                    GetAdoNETcwCase(pictureUrl, e);
                     break;
                 case "ADO.net":
-                    adoNETcwCase(pictureUrl, e);
+                    GetAdoNETcwCase(pictureUrl, e);
                     break;
                 case "📖 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
@@ -140,10 +137,10 @@ namespace pvTgBot
                         replyMarkup: replyKeyboardStart);
                     break;
                 case "/kurs":                  
-                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, GetPostExchangeRates());
+                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, ExchangeRatesCase());
                     break;
                 case "/mono":
-                    monoCase(e);                   
+                    MonoBankExchangeRatesCase(e);                   
                     break;
                 case "/privat":
                     string privatLink = "https://privatbank.ua/uploads/media/default/0001/14/a6507601ef7e311f4d5af21ea9b8e0ce69105850.png";
@@ -155,7 +152,7 @@ namespace pvTgBot
                     break;
                 case "/news":
                     string logo = "https://www.radiosvoboda.org/Content/responsive/RFE/uk-UA/img/logo.png";                   
-                    await _bot.SendPhotoAsync(message.Chat.Id, logo, GetPostNews(), ParseMode.Html);
+                    await _bot.SendPhotoAsync(message.Chat.Id, logo, RSS.GetPostNews(), ParseMode.Html);
                     break;
                 #region
                 //case "/time":
@@ -167,9 +164,9 @@ namespace pvTgBot
                     await _bot.SendStickerAsync(message.Chat.Id, stickersErr());          
                     break;
             }
-        }       
+        }
 
-        private async static void adoNETcwCase(string pictureUrl,Telegram.Bot.Args.MessageEventArgs e)
+        private async static void GetAdoNETcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
         {
             var link1 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
             var link2 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
@@ -179,67 +176,6 @@ namespace pvTgBot
                 new[] { InlineKeyboardButton.WithUrl("2️⃣ detached (03.12.2020)", link2) }
             });
             await _bot.SendPhotoAsync(e.Message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
-        }
-
-        private async static void monoCase(Telegram.Bot.Args.MessageEventArgs e)
-        {
-            var maxRetryAttempts = 3;           
-
-            try
-            {
-                await RetryHelper.RetryOnExceptionAsync<HttpRequestException>
-                    (maxRetryAttempts, async () =>
-                    {
-                        string monoLink = "https://psm7.com/awards-2020/wp-content/uploads/2020/11/1604584696-image-480x230-c-default.png";
-                        string monoRef = "https://monobank.ua/r/GsbX";
-                        string monoDonate = "send.monobank.ua/jar/5JfMjg4P5K";
-                        var inlineKeyboardMono = new InlineKeyboardMarkup(new[] {
-                                    new[] { InlineKeyboardButton.WithUrl("💳 отримати картку в 2 кліки", monoRef) },
-                                    new[] { InlineKeyboardButton.WithUrl("🐈 підтримати автора бота", monoDonate)}
-                        });
-                        await _bot.SendPhotoAsync(e.Message.Chat.Id, monoLink,
-                            MonoBankCurrencyAPI.GetMonoExchangeRate().Result, replyMarkup: inlineKeyboardMono);
-                        //await _bot.SendTextMessageAsync(e.Message.Chat.Id, mono().Result, replyMarkup: inlineKeyboardMono);
-                    });
-            }
-            catch (Exception ex)
-            {
-                await _bot.SendTextMessageAsync(e.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати," +
-                    " така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
-
-                string logText = $"{DateTime.Now.ToShortTimeString()}\tException: { ex.Message}";
-                Console.WriteLine(logText);
-
-                string logFileName = $"{DateTime.Now.ToShortDateString()}.txt";
-               
-                File.AppendAllText(logFileName, logText + "\n");             
-            }
-        }       
-        
-        public static string GetPostExchangeRates()
-        {
-            return $"📊 Актуальні курси валют:\n\nНБУ\n{NBUCurrencyAPI.GetExchangeRateNBU()}\n\n" +
-                $"/mono  MonoBank\n" +
-                $"/privat  ПриватБанк\n\n" +
-                        $"EXMO\n{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("BTC", "USD").Result}" +
-                            $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ETH", "USD").Result}" +
-                                $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("LTC", "USD").Result}" +
-                            $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ZEC", "USD").Result}" +
-                        $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("XRP", "USD").Result}";
-        }              
-
-        public static string GetPostNews()
-        {         
-            var full = new List<string>
-                    {"🔥 Головне за день в Україні та світі\n\n",
-                        $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[0].Link}", $"{RSS.GetLatestFivePosts().ToList()[0].Title}")}",
-                                $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[1].Link}", $"{RSS.GetLatestFivePosts().ToList()[1].Title}")}",
-                                            $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[2].Link}", $"{RSS.GetLatestFivePosts().ToList()[2].Title}")}",
-                                    $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[3].Link}", $"{RSS.GetLatestFivePosts().ToList()[3].Title}")}",
-                            $"🗞{GetHyperLink($"{RSS.GetLatestFivePosts().ToList()[4].Link}", $"{RSS.GetLatestFivePosts().ToList()[4].Title}")}"
-                    };
-
-            return string.Join(" ", full);         
         }
 
         private async static void GetPostMystat(string link, string numberBook, string pictureLink, string filePath, Telegram.Bot.Args.MessageEventArgs e)
@@ -293,17 +229,51 @@ namespace pvTgBot
             return result;
         }
 
-        public static string GetHyperLink(string link, string text)
+        public static string ExchangeRatesCase()
         {
-            Regex regex = new Regex(@"(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?");
+            return $"📊 Актуальні курси валют:\n\nНБУ\n{NBUCurrencyAPI.GetExchangeRateNBU()}\n\n" +
+                $"/mono  MonoBank\n" +
+                $"/privat  ПриватБанк\n\n" +
+                        $"EXMO\n{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("BTC", "USD").Result}" +
+                            $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ETH", "USD").Result}" +
+                                $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("LTC", "USD").Result}" +
+                            $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ZEC", "USD").Result}" +
+                        $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("XRP", "USD").Result}";
+        }
 
-            MatchCollection matches = regex.Matches(link);
-            if (matches.Count > 0)
+        private async static void MonoBankExchangeRatesCase(Telegram.Bot.Args.MessageEventArgs e)
+        {
+            var maxRetryAttempts = 3;
+
+            try
             {
-                foreach (Match match in matches)
-                    link = link.Replace(match.Value, "<a href=\"" + match.Value + "\">" + text + "</a>");
+                await RetryHelper.RetryOnExceptionAsync<HttpRequestException>
+                    (maxRetryAttempts, async () =>
+                    {
+                        string monoLink = "https://psm7.com/awards-2020/wp-content/uploads/2020/11/1604584696-image-480x230-c-default.png";
+                        string monoRef = "https://monobank.ua/r/GsbX";
+                        string monoDonate = "send.monobank.ua/jar/5JfMjg4P5K";
+                        var inlineKeyboardMono = new InlineKeyboardMarkup(new[] {
+                                    new[] { InlineKeyboardButton.WithUrl("💳 отримати картку в 2 кліки", monoRef) },
+                                    new[] { InlineKeyboardButton.WithUrl("🐈 підтримати автора бота", monoDonate)}
+                        });
+                        await _bot.SendPhotoAsync(e.Message.Chat.Id, monoLink,
+                            MonoBankCurrencyAPI.GetMonoExchangeRate().Result, replyMarkup: inlineKeyboardMono);
+                        //await _bot.SendTextMessageAsync(e.Message.Chat.Id, mono().Result, replyMarkup: inlineKeyboardMono);
+                    });
             }
-            return link;
+            catch (Exception ex)
+            {
+                await _bot.SendTextMessageAsync(e.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати," +
+                    " така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
+
+                string logText = $"{DateTime.Now.ToShortTimeString()}\tException: { ex.Message}";
+                Console.WriteLine(logText);
+
+                string logFileName = $"{DateTime.Now.ToShortDateString()}.txt";
+
+                File.AppendAllText(logFileName, logText + "\n");
+            }
         }
 
         private static async Task writeFileAsync(string path, string fileName)
@@ -393,60 +363,6 @@ namespace pvTgBot
         //            return "Error calling API. Please do manual lookup.";
         //        }
         //    }
-        //}
-        public static class RetryHelper
-        {
-            public static async Task RetryOnExceptionAsync(int maxRetryAttempts, Func<Task> operation)
-            {
-                await RetryOnExceptionAsync<Exception>(maxRetryAttempts, operation);
-            }
-
-            public static async Task RetryOnExceptionAsync<TException>(int maxRetryAttempts, Func<Task> operation) where TException : Exception
-            {
-                if (maxRetryAttempts <= 0)
-                    throw new ArgumentOutOfRangeException(nameof(maxRetryAttempts));
-
-                var retryattempts = 0;
-                do
-                {
-                    try
-                    {
-                        retryattempts++;
-                        await operation();
-                        break;
-                    }
-                    catch (TException ex)
-                    {
-                        if (retryattempts == maxRetryAttempts)
-                            throw;
-
-                        await CreateRetryDelayForException(maxRetryAttempts, retryattempts, ex);
-                    }
-                } while (true);
-            }
-
-            private static Task CreateRetryDelayForException(int maxRetryAttempts, int attempts, Exception ex)
-            {
-                int delay = IncreasingDelayInSeconds(attempts);
-                Console.WriteLine("Attempt {0} of {1} failed. New retry after {2} seconds.", attempts.ToString(), maxRetryAttempts.ToString(), delay.ToString());
-                return Task.Delay(delay);
-            }
-
-            internal static int[] DelayPerAttemptInSeconds =
-            {
-            (int) TimeSpan.FromSeconds(5).TotalSeconds,
-            (int) TimeSpan.FromSeconds(30).TotalSeconds,
-            (int) TimeSpan.FromMinutes(3).TotalSeconds,
-            (int) TimeSpan.FromMinutes(10).TotalSeconds,
-            (int) TimeSpan.FromMinutes(30).TotalSeconds
-        };
-
-            static int IncreasingDelayInSeconds(int failedAttempts)
-            {
-                if (failedAttempts <= 0) throw new ArgumentOutOfRangeException();
-
-                return failedAttempts >= DelayPerAttemptInSeconds.Length ? DelayPerAttemptInSeconds.Last() : DelayPerAttemptInSeconds[failedAttempts];
-            }
-        }
+        //}       
     }
 }

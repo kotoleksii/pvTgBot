@@ -6,19 +6,19 @@ namespace pvTgBot.Services
 {
     public class NBUCurrencyAPI
     {
-        private static XmlTextReader reader;
+        private static XmlTextReader _reader;
 
         public static string GetExchangeRateNBU()
         {
             decimal? usd = null, eur = null;
-            using (reader = new XmlTextReader("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange"))
+            using (_reader = new XmlTextReader("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange"))
             {
-                while (reader.ReadToFollowing("rate"))
+                while (_reader.ReadToFollowing("rate"))
                 {
-                    decimal rate = decimal.Parse(reader.ReadElementContentAsString(), CultureInfo.InvariantCulture);
-                    if (reader.ReadToFollowing("cc"))
+                    decimal rate = decimal.Parse(_reader.ReadElementContentAsString(), CultureInfo.InvariantCulture);
+                    if (_reader.ReadToFollowing("cc"))
                     {
-                        switch (reader.ReadElementContentAsString())
+                        switch (_reader.ReadElementContentAsString())
                         {
                             case "USD": usd = rate; break;
                             case "EUR": eur = rate; break;

@@ -38,22 +38,22 @@ namespace pvTgBot.Services
 
     public class WeatherAPI
     {
-        private static HttpWebRequest httpWebRequest;
-        private static HttpWebResponse httpWebResponse;
-        private static StreamReader streamReader;       
+        private static HttpWebRequest _httpWebRequest;
+        private static HttpWebResponse _httpWebResponse;
+        private static StreamReader _streamReader;       
 
         public async static Task<string> GetWeather(string city)
         {
             string url = $@"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid=c9beb94d133fd77596790d7f7d1c3fcf&lang=ua";
 
-            httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            _httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            _httpWebResponse = (HttpWebResponse)_httpWebRequest.GetResponse();
 
             string response;
 
-            using (streamReader = new StreamReader(httpWebResponse.GetResponseStream()))
+            using (_streamReader = new StreamReader(_httpWebResponse.GetResponseStream()))
             {
-                response = await streamReader.ReadToEndAsync();
+                response = await _streamReader.ReadToEndAsync();
             }
 
             WeatherResponse weather = JsonConvert.DeserializeObject<WeatherResponse>(response);

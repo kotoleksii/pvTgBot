@@ -113,6 +113,7 @@
     <Compile Include="services\EXMOCurrencyAPI.cs" />
     <Compile Include="services\NBUCurrencyAPI.cs" />
     <Compile Include="services\PrivatCurrencyInfo.cs" />
+    <Compile Include="services\RetryHelper.cs" />
     <Compile Include="services\RSS.cs" />
     <Compile Include="services\WeatherAPI.cs" />
   </ItemGroup>
