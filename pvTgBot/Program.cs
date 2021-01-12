@@ -111,7 +111,7 @@ namespace pvTgBot
                 case "📗 SP #1":
                     string bookLink1 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqfo8w3wjEFbvR3coeKkqeGPoGE3U030ZGvLMHzFqMIorp%2FGWycLn7ftU7GDHPm5p3s%3D";
                     string pictureBookSPUrl = "https://mystatfiles.itstep.org/index.php?view_key=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqdzNSpc0vHZUe86hVSyQqWkepFnUfyUoVzFt8Dz5ZbKSnZu2okV2GVfpS70IlpasachTEYmmjQS%2F%2BibhfucijLEk2LG7k3Du5Vc21Gpqnu4YA%3D%3D";
-                    GetPostMystat(bookLink1, "1", pictureBookSPUrl, "", "SP", e);
+                    GetPostMystat(bookLink1, true, pictureBookSPUrl, "", "SP", e);
                     break;
                 case "📗 ADO.net #2":
                     string bookLink2 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";
@@ -129,7 +129,7 @@ namespace pvTgBot
                 case "📄 Homework #1":
                     string textLink1 = "https://fsx1.itstep.org/api/v1/files/-aMk6utGlPy3l0PxfqtpRDoxJzyWcbLk";
                     string dueDate1 = new DateTime(2021, 01, 18).ToShortDateString();
-                    GetPostMystat(textLink1, "", pictureSpUrl, "", dueDate1, e);
+                    GetPostMystat(textLink1, false, pictureSpUrl, "", dueDate1, e);
                     break;
                 case "📄 Homework #2":
                     string textLink2 = "https://fsx1.itstep.org/api/v1/files/924Db9acPdOya-65NwQk71c0sNyfyh_3";
@@ -199,12 +199,16 @@ namespace pvTgBot
             await _bot.SendPhotoAsync(e.Message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
         }
 
-        private async static void GetPostMystat(string link, string numberBook, string pictureLink, string filePath, string dueDate, Telegram.Bot.Args.MessageEventArgs e)
+        private async static void GetPostMystat(string link, bool isMaterial, string pictureLink, string filePath, string dueDate, Telegram.Bot.Args.MessageEventArgs e)
         {
-            if (numberBook != string.Empty/*&& filePath == string.Empty*/)
+            if (/*numberBook != string.Empty*//*&& filePath == string.Empty*/isMaterial)
             {
+                string fileName = GetFilenameFromWebServer(link);
+                fileName = fileName.Substring(0, fileName.LastIndexOf('_') + 1).Replace('_', ' ');                
+
                 var inlineKeyboard = new InlineKeyboardMarkup(new[] {
-                    InlineKeyboardButton.WithUrl($"Open {dueDate} book #{numberBook}", link)
+                    //InlineKeyboardButton.WithUrl($"Open {dueDate} book #{numberBook}", link)
+                    InlineKeyboardButton.WithUrl($"Open {fileName}", link)
                     });
 
                 if (pictureLink == String.Empty)
