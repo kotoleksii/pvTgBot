@@ -39,7 +39,7 @@ namespace pvTgBot
 
         private async static void BotOnMessageReceived(object sender, Telegram.Bot.Args.MessageEventArgs e)
         {          
-            string pictureUrl = "https://www.pragimtech.com/wp-content/uploads/2019/02/ado.jpg";
+            string pictureSpUrl = "https://fsx1.itstep.org/api/v1/files/eWXXHaiS0ttTYARWZ8d0dX7Y5MGJsfi2";
 
             var message = e.Message;
 
@@ -67,7 +67,11 @@ namespace pvTgBot
                             new KeyboardButton("📚 Homework"),
                             new KeyboardButton("📖 Materials")
                         },
-                        new[] { new KeyboardButton("👨🏼‍💻 Classwork") },
+                        new[]
+                        { 
+                            new KeyboardButton("👨🏼‍💻 Classwork"),
+                            new KeyboardButton("💬 About"),
+                        },
                         new[] { new KeyboardButton("🚪 Exit") }
                         #region
                         //new []
@@ -86,46 +90,52 @@ namespace pvTgBot
                     //    new [] { new KeyboardButton("ADO.net") },
                     //    new [] { new KeyboardButton("🔙 Back") }                       
                     //}, true);
-                    //await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);  
-
-                    GetAdoNETcwCase(pictureUrl, e);
+                    //await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW); 
+                    
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫");
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "No repository found🤷🏻‍♂️");                    
+                    ///GetSPcwCase(pictureSpUrl, e);
                     break;
-                case "ADO.net":
-                    GetAdoNETcwCase(pictureUrl, e);
-                    break;
+                //case "ADO.net":
+                //    GetSPcwCase(pictureUrl, e);
+                //    break;
                 case "📖 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                    {
-                        new[] { new KeyboardButton("📗 ADO.net #2") },
-                        new[] { new KeyboardButton("📗 ADO.net #1")},
-                        new[] { new KeyboardButton("🔙 Back"),}
+                        //new[] { new KeyboardButton("📗 ADO.net #2") },
+                        //new[] { new KeyboardButton("📗 ADO.net #1")},
+                        new[] { new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
                     break;
                 case "📗 ADO.net #1":
                     string bookLink1 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";                 
-                    GetPostMystat(bookLink1, "1", pictureUrl, "", e);
+                    //GetPostMystat(bookLink1, "1", pictureSpUrl, "", e);
                     break;
                 case "📗 ADO.net #2":
                     string bookLink2 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";
-                    GetPostMystat(bookLink2, "2", pictureUrl, "", e);                   
+                    //GetPostMystat(bookLink2, "2", pictureSpUrl, "", e);                   
                     break;
                 case "📚 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
-                        new[] { new KeyboardButton("📄 Homework #2") },
+                        //new[] { new KeyboardButton("📄 Homework #2") },
                         new[] { new KeyboardButton("📄 Homework #1")},
                         new[] { new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
                 case "📄 Homework #1":
-                    string textLink1 = "https://fsx1.itstep.org/api/v1/files/67SquyJh0Lzhvwbo2V6a60AaFdswwxiw";
-                    GetPostMystat(textLink1, "", "", "", e);
+                    string textLink1 = "https://fsx1.itstep.org/api/v1/files/-aMk6utGlPy3l0PxfqtpRDoxJzyWcbLk";
+                    string dueDate1 = new DateTime(2021, 01, 18).ToShortDateString();
+                    GetPostMystat(textLink1, "", pictureSpUrl, "", dueDate1, e);
                     break;
                 case "📄 Homework #2":
                     string textLink2 = "https://fsx1.itstep.org/api/v1/files/924Db9acPdOya-65NwQk71c0sNyfyh_3";
-                    GetPostMystat(textLink2, "", pictureUrl, "", e);
+                    //GetPostMystat(textLink2, "", pictureSpUrl, "", e);
+                    break;
+                case "💬 About":
+                    await _bot.SendTextMessageAsync(message.Chat.Id, GetAboutCase());
                     break;
                 case "🚪 Exit":
                     var replyKeyboardStart = new ReplyKeyboardMarkup(new[]
@@ -166,19 +176,27 @@ namespace pvTgBot
             }
         }
 
-        private async static void GetAdoNETcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
+        private static string GetAboutCase()
+        {
+            return $"v 1.0 ({new DateTime(2021, 01, 12).ToShortDateString()})\n" +
+                "HomeWork\n" +
+                "- add HomeWork #1\n" +
+                "- add Due date in method";
+        }
+
+        private async static void GetSPcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
         {
             var link1 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
             var link2 = "https://github.com/itstep-org/itstep_pv912_ado_net/tree/master/20201201_intro";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
-                new[] { InlineKeyboardButton.WithUrl("1️⃣ intro (01.12.2020)", link1) },
-                new[] { InlineKeyboardButton.WithUrl("2️⃣ detached (03.12.2020)", link2) }
+                //new[] { InlineKeyboardButton.WithUrl("1️⃣ intro (01.12.2020)", link1) },
+                new[] { InlineKeyboardButton.WithUrl("1️⃣ intro (01.12.2020)", link2) }
             });
             await _bot.SendPhotoAsync(e.Message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
         }
 
-        private async static void GetPostMystat(string link, string numberBook, string pictureLink, string filePath, Telegram.Bot.Args.MessageEventArgs e)
+        private async static void GetPostMystat(string link, string numberBook, string pictureLink, string filePath, string dueDate, Telegram.Bot.Args.MessageEventArgs e)
         {
             if (numberBook != string.Empty/*&& filePath == string.Empty*/)
             {
@@ -195,7 +213,9 @@ namespace pvTgBot
             {
                 string fileName = "";
 
-                if (link != String.Empty)
+                if (link != String.Empty && dueDate != String.Empty)
+                    fileName = _wc.DownloadString(link) + $"\n\nDue date: {dueDate}";
+                else
                     fileName = _wc.DownloadString(link);
 
                 if (filePath != String.Empty)
