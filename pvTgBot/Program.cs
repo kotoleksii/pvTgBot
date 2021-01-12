@@ -103,14 +103,15 @@ namespace pvTgBot
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                    {
                         //new[] { new KeyboardButton("📗 ADO.net #2") },
-                        //new[] { new KeyboardButton("📗 ADO.net #1")},
+                        new[] { new KeyboardButton("📗 SP #1")},
                         new[] { new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
                     break;
-                case "📗 ADO.net #1":
-                    string bookLink1 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";                 
-                    //GetPostMystat(bookLink1, "1", pictureSpUrl, "", e);
+                case "📗 SP #1":
+                    string bookLink1 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqfo8w3wjEFbvR3coeKkqeGPoGE3U030ZGvLMHzFqMIorp%2FGWycLn7ftU7GDHPm5p3s%3D";
+                    string pictureBookSPUrl = "https://mystatfiles.itstep.org/index.php?view_key=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqdzNSpc0vHZUe86hVSyQqWkepFnUfyUoVzFt8Dz5ZbKSnZu2okV2GVfpS70IlpasachTEYmmjQS%2F%2BibhfucijLEk2LG7k3Du5Vc21Gpqnu4YA%3D%3D";
+                    GetPostMystat(bookLink1, "1", pictureBookSPUrl, "", "SP", e);
                     break;
                 case "📗 ADO.net #2":
                     string bookLink2 = "https://drive.google.com/file/d/168N055TmxoJjQBLkahxwtc85hasWgoM8/view?usp=sharing";
@@ -181,7 +182,9 @@ namespace pvTgBot
             return $"v 1.0 ({new DateTime(2021, 01, 12).ToShortDateString()})\n" +
                 "HomeWork\n" +
                 "- add HomeWork #1\n" +
-                "- add Due date in method";
+                "- add Due date in method\n" +
+                "Materials\n" +
+                "- add SP book button";
         }
 
         private async static void GetSPcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
@@ -201,7 +204,7 @@ namespace pvTgBot
             if (numberBook != string.Empty/*&& filePath == string.Empty*/)
             {
                 var inlineKeyboard = new InlineKeyboardMarkup(new[] {
-                    InlineKeyboardButton.WithUrl($"Open ADO.net book #{numberBook}", link)
+                    InlineKeyboardButton.WithUrl($"Open {dueDate} book #{numberBook}", link)
                     });
 
                 if (pictureLink == String.Empty)
