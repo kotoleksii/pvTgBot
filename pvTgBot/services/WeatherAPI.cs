@@ -66,7 +66,8 @@ namespace pvTgBot.Services
                 smile = "☁";
             if (weather.Weather[0].Description == "туман")
                 smile = "🌁";
-            if (weather.Weather[0].Description == "легка злива")
+            if (weather.Weather[0].Description == "легка злива" ||
+                weather.Weather[0].Description == "слабка мряка")
                 smile = "🌧";
             if (weather.Weather[0].Description == "чисте небо")
                 smile = "☀";
