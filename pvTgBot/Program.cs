@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Net.Http;
 using pvTgBot.Services;
+using System.Text.RegularExpressions;
 
 namespace pvTgBot
 {
@@ -104,7 +105,7 @@ namespace pvTgBot
                 case "📖 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                    {
-                        //new[] { new KeyboardButton("📗 ADO.net #2") },
+                        //new[] { new KeyboardButton("📗 SP #2") },
                         new[] { new KeyboardButton("📗 SP #1")},
                         new[] { new KeyboardButton("🔙 Back")}
                     }, true);
@@ -204,12 +205,12 @@ namespace pvTgBot
         {
             var link1 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210111_um_reg_dll";
             var link2 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210112_proc";
-            var link2_1 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210112_proc2";          
+            var link2_1 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210112_proc2";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
-                new[] { InlineKeyboardButton.WithUrl("proc2", link2_1) ,
-                InlineKeyboardButton.WithUrl("proc", link2)},
-                new[] { InlineKeyboardButton.WithUrl("um reg dll", link1) }
+                new[] { InlineKeyboardButton.WithUrl(link2_1.Remove(0, 67).Trim('_').Replace('_', ' '), link2_1) ,
+                InlineKeyboardButton.WithUrl(link2.Remove(0, 67).Trim('_').Replace('_', ' '), link2)},
+                new[] { InlineKeyboardButton.WithUrl(link1.Remove(0, 67).Trim('_').Replace('_', ' '), link1) }
             });
             await _bot.SendPhotoAsync(e.Message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
         }
@@ -223,7 +224,7 @@ namespace pvTgBot
 
                 var inlineKeyboard = new InlineKeyboardMarkup(new[] {
                     //InlineKeyboardButton.WithUrl($"Open {dueDate} book #{numberBook}", link)
-                    InlineKeyboardButton.WithUrl($"Open {fileName}", link)
+                    InlineKeyboardButton.WithUrl($"{fileName}", link)
                     });
 
                 if (pictureLink == String.Empty)
