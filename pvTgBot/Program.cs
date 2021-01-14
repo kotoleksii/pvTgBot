@@ -67,8 +67,8 @@ namespace pvTgBot
                     {
                         new[]
                         {
-                            new KeyboardButton("📚 Homework"),
-                            new KeyboardButton("📖 Materials")
+                            new KeyboardButton("📝 Homework"),
+                            new KeyboardButton("📚 Materials")
                         },
                         new[]
                         { 
@@ -103,7 +103,7 @@ namespace pvTgBot
                     #endregion
                     GetSPcwCase(pictureSpUrl, e);
                     break;
-                case "📖 Materials":
+                case "📚 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                    {
                         //new[] { new KeyboardButton("📗 SP #2") },
@@ -126,7 +126,7 @@ namespace pvTgBot
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Simple services are always with you 💜", replyMarkup: replyKeyboardServices);
                     break;
-                case "📚 Homework":
+                case "📝 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
                         new[] { new KeyboardButton("📄 Homework #2") },
