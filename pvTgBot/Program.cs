@@ -8,6 +8,7 @@ using System.Text;
 using System.Net.Http;
 using pvTgBot.Services;
 using System.Text.RegularExpressions;
+using Telegram.Bot.Args;
 
 namespace pvTgBot
 {
@@ -118,8 +119,10 @@ namespace pvTgBot
                 case "🌐 Services":
                     var replyKeyboardServices = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("☀ Weather") },
-                        new[] { new KeyboardButton("🔙 Back")}
+                        new[] { new KeyboardButton("💸 Exchange Rate"),
+                        new KeyboardButton("📰 News") },
+                        new[] { new KeyboardButton("☀ Weather"), 
+                        new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Simple services are always with you 💜", replyMarkup: replyKeyboardServices);
                     break;
@@ -155,8 +158,15 @@ namespace pvTgBot
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀",
                         replyMarkup: replyKeyboardStart);
                     break;
-                case "/kurs":                  
-                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, ExchangeRatesCase());
+                case "/kurs":
+                case "💸 Exchange Rate":
+                    #region
+                    //var inlineKeyboardRates = new InlineKeyboardMarkup(new[] {
+                    //                new[] { InlineKeyboardButton.WithCallbackData("mono"),
+                    //                InlineKeyboardButton.WithCallbackData("privat") }
+                    //    });
+                    #endregion
+                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, ExchangeRatesCase()/*, replyMarkup: inlineKeyboardRates*/);
                     break;
                 case "/mono":
                     MonoBankExchangeRatesCase(e);                   
@@ -171,6 +181,7 @@ namespace pvTgBot
                     await _bot.SendTextMessageAsync(message.Chat.Id, WeatherAPI.GetWeather("Zaporizhia").Result);
                     break;
                 case "/news":
+                case "📰 News":
                     string logo = "https://www.radiosvoboda.org/Content/responsive/RFE/uk-UA/img/logo.png";                   
                     await _bot.SendPhotoAsync(message.Chat.Id, logo, RSS.GetPostNews(), ParseMode.Html);
                     break;
@@ -275,8 +286,8 @@ namespace pvTgBot
         public static string ExchangeRatesCase()
         {
             return $"📊 Актуальні курси валют:\n\nНБУ\n{NBUCurrencyAPI.GetExchangeRateNBU()}\n\n" +
-                $"/mono  MonoBank\n" +
-                $"/privat  ПриватБанк\n\n" +
+                $"MonoBank  /mono\n" +
+                $"ПриватБанк  /privat\n\n" +
                         $"EXMO\n{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("BTC", "USD").Result}" +
                             $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ETH", "USD").Result}" +
                                 $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("LTC", "USD").Result}" +
@@ -336,10 +347,11 @@ namespace pvTgBot
             };
             int i = _rnd.Next(0, stickers.Length);
             return stickers[i];
-        }       
+        }
 
         //private async static void BotOnCallBackQueryReceived(object sender, CallbackQueryEventArgs e)
         //{
+
         //    string btnText = e.CallbackQuery.Data;
         //    string name = $"{e.CallbackQuery.From.FirstName} {e.CallbackQuery.From.LastName}";
 
@@ -347,17 +359,48 @@ namespace pvTgBot
 
         //    try
         //    {
-        //        if (btnText == "picture")
+        //        if (btnText == "privat")
         //        {
-        //            await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.imgonline.com.ua/examples/bee-on-daisy.jpg");
-
+        //            string privatLink = "https://privatbank.ua/uploads/media/default/0001/14/a6507601ef7e311f4d5af21ea9b8e0ce69105850.png";
+        //            await _bot.SendPhotoAsync(e.CallbackQuery.Message.Chat.Id, privatLink,
+        //                    PrivatCurrencyAPI.GetPrivatExchangeRate().Result + "\n👇🏻 підтримати автора бота\n📑 4149 4991 1185 5175");
         //        }
-        //        else if (btnText == "video")
+        //        else if (btnText == "mono")
         //        {
-        //            await _bot.SendTextMessageAsync(e.CallbackQuery.From.Id, "https://www.youtube.com/watch?v=91JOUGJBTac");
+        //            var maxRetryAttempts = 3;
+
+        //            try
+        //            {
+        //                await RetryHelper.RetryOnExceptionAsync<HttpRequestException>
+        //                    (maxRetryAttempts, async () =>
+        //                    {
+        //                        string monoLink = "https://psm7.com/awards-2020/wp-content/uploads/2020/11/1604584696-image-480x230-c-default.png";
+        //                        string monoRef = "https://monobank.ua/r/GsbX";
+        //                        string monoDonate = "send.monobank.ua/jar/5JfMjg4P5K";
+        //                        var inlineKeyboardMono = new InlineKeyboardMarkup(new[] {
+        //                            new[] { InlineKeyboardButton.WithUrl("💳 отримати картку в 2 кліки", monoRef) },
+        //                            new[] { InlineKeyboardButton.WithUrl("🐈 підтримати автора бота", monoDonate)}
+        //                        });
+        //                        await _bot.SendPhotoAsync(e.CallbackQuery.Message.Chat.Id, monoLink,
+        //                            MonoBankCurrencyAPI.GetMonoExchangeRate().Result, replyMarkup: inlineKeyboardMono);
+        //                        //await _bot.SendTextMessageAsync(e.Message.Chat.Id, mono().Result, replyMarkup: inlineKeyboardMono);
+        //                    });
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                await _bot.SendTextMessageAsync(e.CallbackQuery.Message.Chat.Id, "📡 Між запитами необхідно трохи зачекати," +
+        //                    " така вимога сервера. Спробуйте пізніше 🤷🏻‍♂️");
+
+        //                string logText = $"{DateTime.Now.ToShortTimeString()}\tException: { ex.Message}";
+        //                Console.WriteLine(logText);
+
+        //                string logFileName = $"{DateTime.Now.ToShortDateString()}.txt";
+
+        //                File.AppendAllText(logFileName, logText + "\n");
+        //            }
         //        }
 
-        //        await _bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id, $"You press button {btnText}");
+        //        await _bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id);
         //    }
         //    catch (Exception ex)
         //    {
