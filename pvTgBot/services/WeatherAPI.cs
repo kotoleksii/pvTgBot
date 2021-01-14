@@ -80,8 +80,8 @@ namespace pvTgBot.Services
                 $"(відчувається як {weather.Main.Feels_Like}°)\n" +
                 $"🌬 {weather.Wind.Speed} м/с\n" +
                 $"💧 {weather.Main.Humidity} %\n" +
-                $"🧘🏻‍♂️ {weather.Main.Pressure} hPa\n\n" +
-                $"🗓 {DateTime.Now.ToLongDateString() + " | " + DateTime.Now.ToLongTimeString()}\n";
+                $"🧘🏻‍♂️ {weather.Main.Pressure} hPa\n\n"; //+
+                //$"🗓 {DateTime.Now.ToLongDateString() + " | " + DateTime.Now.ToLongTimeString()}\n";
         }
     }
 }
