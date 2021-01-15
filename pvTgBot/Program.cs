@@ -73,11 +73,12 @@ namespace pvTgBot
                         new[]
                         { 
                             new KeyboardButton("👨🏼‍💻 Classwork"),
+                            new KeyboardButton("🌐 Services")
                             //new KeyboardButton("💬 About"),
-                        },
-                        new[] { 
-                            new KeyboardButton("🌐 Services"),
-                            new KeyboardButton("🚪 Exit") }
+                        }
+                        //new[] { 
+                        //    new KeyboardButton("🌐 Services"),
+                        //    new KeyboardButton("🚪 Exit") }
                         #region
                         //new []
                         //{
@@ -129,8 +130,9 @@ namespace pvTgBot
                 case "📝 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
-                        new[] { new KeyboardButton("📄 Homework #2") },
-                        new[] { new KeyboardButton("📄 Homework #1")},
+                        new[] { new KeyboardButton("📄 Homework #1"),
+                                new KeyboardButton("📄 Homework #2") },
+                        //new[] { new KeyboardButton("📄 Homework #1")},
                         new[] { new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
