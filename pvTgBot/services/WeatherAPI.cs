@@ -58,27 +58,34 @@ namespace pvTgBot.Services
 
             WeatherResponse weather = JsonConvert.DeserializeObject<WeatherResponse>(response);
 
-            string smile = "🏙";
+            string smileStatus = "🏙";
+            string smileTemp = "🌡";
+            string smileWind = "🌬";
 
             if (weather.Weather[0].Description == "рвані хмари" || weather.Weather[0].Description == "хмарно" ||
                 weather.Weather[0].Description == "уривчасті хмари")
-                smile = "☁";
+                smileStatus = "☁";
             if (weather.Weather[0].Description == "туман")
-                smile = "🌁";
+                smileStatus = "🌁";
             if (weather.Weather[0].Description == "легка злива" || weather.Weather[0].Description == "слабка мряка" ||
                 weather.Weather[0].Description == "легкий дощ" || weather.Weather[0].Description == "помірний дощ")
-                smile = "🌧";
+                smileStatus = "🌧";
             if (weather.Weather[0].Description == "чисте небо")
-                smile = "☀";
+                smileStatus = "☀";
             if (weather.Weather[0].Description == "димка")
-                smile = "🌫";
+                smileStatus = "🌫";
 
+            if (weather.Main.Temp <= -10.0f)
+                smileTemp = "🥶";
+
+            if (weather.Wind.Speed >= 10.0f)
+                smileWind = "🌪";
 
             return
-                $"{smile} {weather.Name} | {weather.Weather[0].Description}\n\n" +
-                $"🌡 {weather.Main.Temp}° " +
+                $"{smileStatus} {weather.Name} | {weather.Weather[0].Description}\n\n" +
+                $"{smileTemp} {weather.Main.Temp}° " +
                 $"(відчувається як {weather.Main.Feels_Like}°)\n" +
-                $"🌬 {weather.Wind.Speed} м/с\n" +
+                $"{smileWind} {weather.Wind.Speed} м/с\n" +
                 $"💧 {weather.Main.Humidity} %\n" +
                 $"🧘🏻‍♂️ {weather.Main.Pressure} hPa\n\n"; //+
                 //$"🗓 {DateTime.Now.ToLongDateString() + " | " + DateTime.Now.ToLongTimeString()}\n";
