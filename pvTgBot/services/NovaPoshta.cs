@@ -181,7 +181,13 @@ namespace pvTgBot.Services
 
             NovaPoshtaJSON myDeserializedClass = JsonConvert.DeserializeObject<NovaPoshtaJSON>(dataObject1.ToString());
             
-            return myDeserializedClass.data[0].RecipientFullName;
+            return $"Статус: {myDeserializedClass.data[0].Status}\n" +
+                $"Маршрут: {myDeserializedClass.data[0].CitySender} - {myDeserializedClass.data[0].CityRecipient}\n" +
+                $"Адреса доставки:\n{myDeserializedClass.data[0].WarehouseRecipient}\n" +
+                $"Компанія: {myDeserializedClass.data[0].CounterpartySenderDescription}\n" +               
+                $"Відправник: {myDeserializedClass.data[0].SenderFullNameEW}\n" +
+                $"Телефон відправника: {myDeserializedClass.data[0].PhoneSender}\n" +
+                $"Опис: {myDeserializedClass.data[0].CargoDescriptionString}";
 
         }
     }

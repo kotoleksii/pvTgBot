@@ -187,11 +187,8 @@ namespace pvTgBot
                     string logo = "https://www.radiosvoboda.org/Content/responsive/RFE/uk-UA/img/logo.png";                   
                     await _bot.SendPhotoAsync(message.Chat.Id, logo, RSS.GetPostNews(), ParseMode.Html);
                     break;
-                case "/np":
-                    var response1 = message.Text;
-                    var response2 = message.Text;
-                                     
-                    await _bot.SendTextMessageAsync(message.Chat.Id, NovaPoshta.GetTrackingData(response1, "0504538315").Result );
+                case "/np":                
+                    await _bot.SendTextMessageAsync(message.Chat.Id, NovaPoshta.GetTrackingData("20450328027569", "0504538315").Result);
                     //"20450328027569", "0504538315"
                     //20450328027569
                     break;
@@ -357,7 +354,7 @@ namespace pvTgBot
             };
             int i = _rnd.Next(0, stickers.Length);
             return stickers[i];
-        }
+        }     
 
         //private async static void BotOnCallBackQueryReceived(object sender, CallbackQueryEventArgs e)
         //{
