@@ -79,9 +79,9 @@ namespace pvTgBot.Services
                 //$"💰Курс валют MonoBank\n" +
                 $"🗓 {DateTime.Now.ToLongDateString()}\n\n" +
                 $"Валюта     Купівля     Продаж\n" +
-                $"🇺🇸{MonoCurrencyCode.USD}       {USrateBuy}         {USrateSell}\n" +
-                $"🇪🇺{MonoCurrencyCode.EUR}       {EUrateBuy}         {EUrateSell}\n" +
-                $"🇵🇱{MonoCurrencyCode.PLN}       {PLrateBuy}            {PLrateSell}\n";
+                $"🇺🇸{MonoCurrencyCode.USD}       {USrateBuy}          {USrateSell}\n" +
+                $"🇪🇺{MonoCurrencyCode.EUR}       {EUrateBuy}          {EUrateSell}\n" +
+                $"🇵🇱{MonoCurrencyCode.PLN}        {PLrateBuy}             {PLrateSell}\n";
         }
     }
 }
