@@ -108,7 +108,7 @@ namespace pvTgBot
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                    {
                         //new[] { new KeyboardButton("📗 SP #2") },
-                        new[] { new KeyboardButton("📗 SP #1")},
+                        new[] { new KeyboardButton("📗 SP #1"), new KeyboardButton("📗 SP #2")},
                         new[] { new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
@@ -116,6 +116,10 @@ namespace pvTgBot
                 case "📗 SP #1":
                     string bookLink1 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqfo8w3wjEFbvR3coeKkqeGPoGE3U030ZGvLMHzFqMIorp%2FGWycLn7ftU7GDHPm5p3s%3D";
                     GetPostMystat(bookLink1, true, pictureBookSPUrl, "", "SP", e);
+                    break;
+                case "📗 SP #2":
+                    string bookLink2 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfTmCiBPBVvaQRGS9IFDr3eLoe%2B8L36tAfmM2y6UJjyoqwKGZGyeobvs76lLbsVfnE%3D";
+                    GetPostMystat(bookLink2, true, pictureBookSPUrl, "", "SP", e);
                     break;
                 case "🌐 Services":
                     var replyKeyboardServices = new ReplyKeyboardMarkup(new[]
