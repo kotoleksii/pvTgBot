@@ -130,9 +130,11 @@ namespace pvTgBot
                 case "📝 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
+                        new[] { new KeyboardButton("📄 Homework #3"),
+                        
+                        },
                         new[] { new KeyboardButton("📄 Homework #1"),
                                 new KeyboardButton("📄 Homework #2") },
-                        //new[] { new KeyboardButton("📄 Homework #1")},
                         new[] { new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
@@ -146,6 +148,11 @@ namespace pvTgBot
                     string textLink2 = "https://fsx1.itstep.org/api/v1/files/jJCWYhF4rdJ0yp-wAVrtYUeH72yqZhgZ";
                     string dueDate2 = new DateTime(2021, 01, 19).ToShortDateString();
                     GetPostMystat(textLink2, false, pictureSpUrl, "", dueDate2, e);
+                    break;
+                case "📄 Homework #3":
+                    string textLink3 = "https://fsx1.itstep.org/api/v1/files/psdBHL_YV6E1DfctijguCB5KD8RhD0MT";
+                    string dueDate3 = new DateTime(2021, 01, 26).ToShortDateString();
+                    GetPostMystat(textLink3, false, pictureSpUrl, "", dueDate3, e);
                     break;
                 case "💬 About":
                     await _bot.SendTextMessageAsync(message.Chat.Id, GetAboutCase());
@@ -206,7 +213,7 @@ namespace pvTgBot
 
         private static string GetAboutCase()
         {
-            return $"v 1.1 ({new DateTime(2021, 01, 13).ToShortDateString()})\n" +
+            return $"Перезапустіть бота або натисніть /start\nv 1.1 ({new DateTime(2021, 01, 13).ToShortDateString()})\n" +
                 $"- add Services\n" +
                 $"Services\n" +
                 $"- add Weather\n" +
@@ -224,8 +231,10 @@ namespace pvTgBot
             var link1 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210111_um_reg_dll";
             var link2 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210112_proc";
             var link2_1 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210112_proc2";
+            var link3 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210119_domains";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                new[] {InlineKeyboardButton.WithUrl(link3.Remove(0, 67).Trim('_').Replace('_', ' '), link3) },
                 new[] { InlineKeyboardButton.WithUrl(link2_1.Remove(0, 67).Trim('_').Replace('_', ' '), link2_1) ,
                 InlineKeyboardButton.WithUrl(link2.Remove(0, 67).Trim('_').Replace('_', ' '), link2)},
                 new[] { InlineKeyboardButton.WithUrl(link1.Remove(0, 67).Trim('_').Replace('_', ' '), link1) }

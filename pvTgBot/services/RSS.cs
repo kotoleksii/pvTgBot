@@ -2,7 +2,6 @@
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace pvTgBot.Services
@@ -27,7 +26,7 @@ namespace pvTgBot.Services
             return (from itm in _feed.Items
                     select new FeedItem
                     {
-                        Title = itm.Title.Text +"\n",
+                        Title = itm.Title.Text + "\n",
                         Link = itm.Id + "\n"
                     }).ToList().Take(5);
         }
@@ -57,6 +56,6 @@ namespace pvTgBot.Services
                     link = link.Replace(match.Value, "<a href=\"" + match.Value + "\">" + text + "</a>");
             }
             return link;
-        }    
+        }
     }
 }

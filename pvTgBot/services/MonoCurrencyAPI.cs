@@ -35,11 +35,11 @@ namespace pvTgBot.Services
 
     public class MonoCurrencyResponse
     {
-        public MonoCurrencyInfo[] Currencies { get; set; }      
+        public MonoCurrencyInfo[] Currencies { get; set; }
     }
 
     public class MonoError
-    {        
+    {
         public string Description { get; set; }
     }
 
@@ -83,5 +83,5 @@ namespace pvTgBot.Services
                 $"🇪🇺{MonoCurrencyCode.EUR}       {EUrateBuy}          {EUrateSell}\n" +
                 $"🇵🇱{MonoCurrencyCode.PLN}        {PLrateBuy}             {PLrateSell}\n";
         }
-    }
+    }    
 }
