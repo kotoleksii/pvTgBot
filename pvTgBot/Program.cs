@@ -133,13 +133,18 @@ namespace pvTgBot
                     break;
                 case "📝 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
-                   {
-                        new[] { new KeyboardButton("📄 Homework #3"),
-                                new KeyboardButton("📄 Homework #4")
+                   {                       
+                        new[] {
+                                new KeyboardButton("📄 Homework #5"),
+                                new KeyboardButton("📄 Homework #4")                               
                         },
-                        new[] { new KeyboardButton("📄 Homework #1"),
-                                new KeyboardButton("📄 Homework #2") },
-                        new[] { new KeyboardButton("🔙 Back")}
+                        new[] { 
+                                new KeyboardButton("📄 Homework #2"),
+                                new KeyboardButton("📄 Homework #3")
+                        },
+                        new[] { 
+                            new KeyboardButton("📄 Homework #1"),
+                            new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
@@ -162,6 +167,11 @@ namespace pvTgBot
                     string textLink4 = "https://fsx1.itstep.org/api/v1/files/8G-c-2vggbe2CpOwRt6wxdd-xSJI814g";
                     string dueDate4 = new DateTime(2021, 01, 27).ToShortDateString();
                     GetPostMystat(textLink4, false, pictureSpUrl, "", dueDate4, e);
+                    break;
+                case "📄 Homework #5":
+                    string textLink5 = "https://fsx1.itstep.org/api/v1/files/3ixQLMs4EZUCObCwf5nw4_mimm_mkloE";
+                    string dueDate5 = new DateTime(2021, 01, 29).ToShortDateString();
+                    GetPostMystat(textLink5, false, pictureSpUrl, "", dueDate5, e);
                     break;
                 case "💬 About":
                     await _bot.SendTextMessageAsync(message.Chat.Id, GetAboutCase());
@@ -242,9 +252,11 @@ namespace pvTgBot
             var link2_1 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210112_proc2";
             var link3 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210119_domains";
 		    var link4 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210120_treads_1";
+            var link5 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210121_sync";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
-		new[] {InlineKeyboardButton.WithUrl(link4.Remove(0, 67).Trim('_').Replace('_', ' '), link4) },
+                new[] {InlineKeyboardButton.WithUrl(link5.Remove(0, 67).Trim('_').Replace('_', ' '), link5) },
+                new[] {InlineKeyboardButton.WithUrl(link4.Remove(0, 67).Trim('_').Replace('_', ' '), link4) },
                 new[] {InlineKeyboardButton.WithUrl(link3.Remove(0, 67).Trim('_').Replace('_', ' '), link3) },
                 new[] { InlineKeyboardButton.WithUrl(link2_1.Remove(0, 67).Trim('_').Replace('_', ' '), link2_1) ,
                 InlineKeyboardButton.WithUrl(link2.Remove(0, 67).Trim('_').Replace('_', ' '), link2)},
