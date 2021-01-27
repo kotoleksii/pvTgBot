@@ -132,49 +132,82 @@ namespace pvTgBot
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Simple services are always with you 💜", replyMarkup: replyKeyboardServices);
                     break;
                 case "📝 Homework":
+                    #region
+                    // var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
+                    //{
+                    //      new[] {
+                    //             //new KeyboardButton("📄 Homework #7"),
+                    //             new KeyboardButton("📄 Homework #6")
+                    //     },
+                    //     new[] {
+                    //             new KeyboardButton("📄 Homework #5"),
+                    //             new KeyboardButton("📄 Homework #4")                               
+                    //     },
+                    //     new[] { 
+                    //             new KeyboardButton("📄 Homework #2"),
+                    //             new KeyboardButton("📄 Homework #3")
+                    //     },
+                    //     new[] { 
+                    //         new KeyboardButton("📄 Homework #1"),
+                    //         new KeyboardButton("🔙 Back")}
+                    // }, true);
+                    #endregion
+
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
-                   {                       
+                   {
                         new[] {
-                                new KeyboardButton("📄 Homework #5"),
-                                new KeyboardButton("📄 Homework #4")                               
-                        },
-                        new[] { 
-                                new KeyboardButton("📄 Homework #2"),
-                                new KeyboardButton("📄 Homework #3")
-                        },
-                        new[] { 
-                            new KeyboardButton("📄 Homework #1"),
-                            new KeyboardButton("🔙 Back")}
-                    }, true);
+                                new KeyboardButton("📄 SP") }
+                        }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
-                case "📄 Homework #1":
+                case "📄 SP":
+                    var replyKeyboardHomeWorkSP = new ReplyKeyboardMarkup(new[]
+                   {
+                        new[] {
+                                //new KeyboardButton("📄 SP #7")
+                                new KeyboardButton("📄 SP #6"),
+                        },
+                        new[] {
+                                new KeyboardButton("📄 SP #3"),
+                                new KeyboardButton("📄 SP #4"),
+                                new KeyboardButton("📄 SP #5")
+                        },
+                        new[] {
+                            new KeyboardButton("📄 SP #2"),
+                            new KeyboardButton("📄 SP #1"),
+                            new KeyboardButton("🔙 Back")}
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkSP);
+                    break;
+                case "📄 SP #1":
                     string textLink1 = "https://fsx1.itstep.org/api/v1/files/-aMk6utGlPy3l0PxfqtpRDoxJzyWcbLk";
                     string dueDate1 = new DateTime(2021, 01, 18).ToShortDateString();
                     GetPostMystat(textLink1, false, pictureSpUrl, "", dueDate1, e);
                     break;
-                case "📄 Homework #2":
+                case "📄 SP #2":
                     string textLink2 = "https://fsx1.itstep.org/api/v1/files/jJCWYhF4rdJ0yp-wAVrtYUeH72yqZhgZ";
                     string dueDate2 = new DateTime(2021, 01, 19).ToShortDateString();
                     GetPostMystat(textLink2, false, pictureSpUrl, "", dueDate2, e);
                     break;
-                case "📄 Homework #3":
+                case "📄 SP #3":
                     string textLink3 = "https://fsx1.itstep.org/api/v1/files/psdBHL_YV6E1DfctijguCB5KD8RhD0MT";
                     string dueDate3 = new DateTime(2021, 01, 26).ToShortDateString();
                     GetPostMystat(textLink3, false, pictureSpUrl, "", dueDate3, e);
                     break;
-                case "📄 Homework #4":
+                case "📄 SP #4":
                     string textLink4 = "https://fsx1.itstep.org/api/v1/files/8G-c-2vggbe2CpOwRt6wxdd-xSJI814g";
                     string dueDate4 = new DateTime(2021, 01, 27).ToShortDateString();
                     GetPostMystat(textLink4, false, pictureSpUrl, "", dueDate4, e);
                     break;
-                case "📄 Homework #5":
+                case "📄 SP #5":
                     string textLink5 = "https://fsx1.itstep.org/api/v1/files/3ixQLMs4EZUCObCwf5nw4_mimm_mkloE";
                     string dueDate5 = new DateTime(2021, 01, 29).ToShortDateString();
                     GetPostMystat(textLink5, false, pictureSpUrl, "", dueDate5, e);
                     break;
-                case "💬 About":
-                    await _bot.SendTextMessageAsync(message.Chat.Id, GetAboutCase());
+                case "📄 SP #6":
+                    string textLink6 = "https://fsx1.itstep.org/api/v1/files/5gEsrZsqWnB4_CiD916STpCllOZzOeta";
+                    string dueDate6 = new DateTime(2021, 01, 29).ToShortDateString();
+                    GetPostMystat(textLink6, false, pictureSpUrl, "", dueDate6, e);
                     break;
                 case "🚪 Exit":
                     var replyKeyboardStart = new ReplyKeyboardMarkup(new[]
@@ -228,21 +261,6 @@ namespace pvTgBot
                     await _bot.SendStickerAsync(message.Chat.Id, stickersErr());          
                     break;
             }
-        }
-
-        private static string GetAboutCase()
-        {
-            return $"Перезапустіть бота або натисніть /start\nv 1.1 ({new DateTime(2021, 01, 13).ToShortDateString()})\n" +
-                $"- add Services\n" +
-                $"Services\n" +
-                $"- add Weather\n" +
-                $"About\n" +
-                $"- move to Start window\n" +
-                $"v 1.0 ({new DateTime(2021, 01, 12).ToShortDateString()})\n" +
-                "HomeWork\n" +               
-                "- add Due date in method\n" +
-                "Materials\n" +
-                "- add SP book button";
         }
 
         private async static void GetSPcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
