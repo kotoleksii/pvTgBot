@@ -156,7 +156,8 @@ namespace pvTgBot
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
                         new[] {
-                                new KeyboardButton("📄 SP") }
+                                new KeyboardButton("📄 SP"),
+                                new KeyboardButton("🔙 Back")}
                         }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
@@ -175,7 +176,7 @@ namespace pvTgBot
                         new[] {
                             new KeyboardButton("📄 SP #2"),
                             new KeyboardButton("📄 SP #1"),
-                            new KeyboardButton("🔙 Back")}
+                            new KeyboardButton("📝 Homework")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkSP);
                     break;
