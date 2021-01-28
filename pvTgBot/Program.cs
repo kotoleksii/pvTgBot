@@ -108,7 +108,7 @@ namespace pvTgBot
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                    {
                         //new[] { new KeyboardButton("📗 SP #2") },
-                        new[] { new KeyboardButton("📗 SP #1"), new KeyboardButton("📗 SP #2")},
+                        new[] { new KeyboardButton("📗 SP #1"), new KeyboardButton("📗 SP #2"), new KeyboardButton("📗 SP #4")},
                         new[] { new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
@@ -120,6 +120,10 @@ namespace pvTgBot
                 case "📗 SP #2":
                     string bookLink2 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfTmCiBPBVvaQRGS9IFDr3eLoe%2B8L36tAfmM2y6UJjyoqwKGZGyeobvs76lLbsVfnE%3D";
                     GetPostMystat(bookLink2, true, pictureBookSPUrl, "", "SP", e);
+                    break;
+                case "📗 SP #4":
+                    string bookLink3 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqfaot031Ha0EcSi5ViGxQDkmQZY9wMaU5xhPNleSvJW2faOfxpKPOWTvP8c%2BWBA1Wc%3D";
+                    GetPostMystat(bookLink3, true, pictureBookSPUrl, "", "SP", e);
                     break;
                 case "🌐 Services":
                     var replyKeyboardServices = new ReplyKeyboardMarkup(new[]
@@ -272,8 +276,12 @@ namespace pvTgBot
             var link3 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210119_domains";
 		    var link4 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210120_treads_1";
             var link5 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210121_sync";
+            var link6 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210126_monitor_mutex";
+            var link7 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210127_semaphore_events_pool";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                new[] {InlineKeyboardButton.WithUrl(link7.Remove(0, 67).Trim('_').Replace('_', ' '), link7) },
+                new[] {InlineKeyboardButton.WithUrl(link6.Remove(0, 67).Trim('_').Replace('_', ' '), link6) },
                 new[] {InlineKeyboardButton.WithUrl(link5.Remove(0, 67).Trim('_').Replace('_', ' '), link5) },
                 new[] {InlineKeyboardButton.WithUrl(link4.Remove(0, 67).Trim('_').Replace('_', ' '), link4) },
                 new[] {InlineKeyboardButton.WithUrl(link3.Remove(0, 67).Trim('_').Replace('_', ' '), link3) },
