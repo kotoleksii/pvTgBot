@@ -91,17 +91,21 @@ namespace pvTgBot
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);
                     break;              
                 case "👨🏼‍💻 Classwork":
-                    #region
-                    //var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
-                    //{
-                    //    new [] { new KeyboardButton("ADO.net") },
-                    //    new [] { new KeyboardButton("🔙 Back") }                       
-                    //}, true);
-                    //await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW); 
+                    var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
+                    {
+                        new [] 
+                        {
+                            new KeyboardButton("👨🏻‍🏫 SP"),
+                            new KeyboardButton("🔙 Back")
+                        }
+                       
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);
 
                     //await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫");
-                    //await _bot.SendTextMessageAsync(message.Chat.Id, "No repository found🤷🏻‍♂️"); 
-                    #endregion
+
+                    break;
+                case "👨🏻‍🏫 SP":
                     GetSPcwCase(pictureSpUrl, e);
                     break;
                 case "📚 Materials":
@@ -303,8 +307,10 @@ namespace pvTgBot
             var link5 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210121_sync";
             var link6 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210126_monitor_mutex";
             var link7 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/20210127_semaphore_events_pool";
+            var link8 = "https://github.com/itstep-org/itstep_pv912_sp/tree/master/bonus";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                new[] {InlineKeyboardButton.WithUrl(link8.Remove(0, 58), link8) },
                 new[] {InlineKeyboardButton.WithUrl(link7.Remove(0, 67).Trim('_').Replace('_', ' '), link7) },
                 new[] {InlineKeyboardButton.WithUrl(link6.Remove(0, 67).Trim('_').Replace('_', ' '), link6) },
                 new[] {InlineKeyboardButton.WithUrl(link5.Remove(0, 67).Trim('_').Replace('_', ' '), link5) },
