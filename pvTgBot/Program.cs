@@ -106,12 +106,20 @@ namespace pvTgBot
                     break;
                 case "📚 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
-                   {
-                        //new[] { new KeyboardButton("📗 SP #2") },
-                        new[] { new KeyboardButton("📗 SP #1"), new KeyboardButton("📗 SP #2"), new KeyboardButton("📗 SP #4")},
-                        new[] { new KeyboardButton("🔙 Back")}
+                    {                                                
+                        new KeyboardButton("📗 SP"),
+                        new KeyboardButton("🔙 Back")                                             
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
+                    break;
+                case "📗 SP":
+                    var replyKeyboardSP = new ReplyKeyboardMarkup(new[]
+                    {
+                        //new[] { new KeyboardButton("📗 SP #2") },
+                        new[] { new KeyboardButton("📗 SP #1"), new KeyboardButton("📗 SP #2"), new KeyboardButton("📗 SP #4")},
+                        new[] { new KeyboardButton("📚 Materials") }
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "Select a book to work with 👇", replyMarkup: replyKeyboardSP);
                     break;
                 case "📗 SP #1":
                     string bookLink1 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqfo8w3wjEFbvR3coeKkqeGPoGE3U030ZGvLMHzFqMIorp%2FGWycLn7ftU7GDHPm5p3s%3D";
@@ -169,18 +177,20 @@ namespace pvTgBot
                     var replyKeyboardHomeWorkSP = new ReplyKeyboardMarkup(new[]
                    {
                         new[] {
-                                //new KeyboardButton("📄 SP #7")
+                                new KeyboardButton("📄 SP #9"),
+                                new KeyboardButton("📄 SP #8"),
+                                new KeyboardButton("📄 SP #7")
+                        },
+                        new[] {
                                 new KeyboardButton("📄 SP #6"),
+                                new KeyboardButton("📄 SP #5"),               
+                                new KeyboardButton("📄 SP #4")
                         },
                         new[] {
-                                new KeyboardButton("📄 SP #3"),
-                                new KeyboardButton("📄 SP #4"),
-                                new KeyboardButton("📄 SP #5")
-                        },
-                        new[] {
+                            new KeyboardButton("📄 SP #3"),
                             new KeyboardButton("📄 SP #2"),
-                            new KeyboardButton("📄 SP #1"),
-                            new KeyboardButton("📝 Homework")}
+                            new KeyboardButton("📄 SP #1")},
+                        new[]{new KeyboardButton("📝 Homework") },
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkSP);
                     break;
@@ -213,6 +223,21 @@ namespace pvTgBot
                     string textLink6 = "https://fsx1.itstep.org/api/v1/files/5gEsrZsqWnB4_CiD916STpCllOZzOeta";
                     string dueDate6 = new DateTime(2021, 01, 29).ToShortDateString();
                     GetPostMystat(textLink6, false, pictureSpUrl, "", dueDate6, e);
+                    break;
+                case "📄 SP #7":
+                    string textLink8 = "https://fsx1.itstep.org/api/v1/files/ler8U2_bfCcRU2rhDuMQtY0CZJtFfgbe";
+                    string dueDate8 = new DateTime(2021, 01, 29).ToShortDateString();
+                    GetPostMystat(textLink8, false, pictureSpUrl, "", dueDate8, e);
+                    break;
+                case "📄 SP #8":
+                    string textLink7 = "https://fsx1.itstep.org/api/v1/files/Qjz0XA9P_JdyKgzBimVW1hFzINtK2ita";
+                    string dueDate7 = new DateTime(2021, 01, 29).ToShortDateString();
+                    GetPostMystat(textLink7, false, pictureSpUrl, "", dueDate7, e);
+                    break;
+                case "📄 SP #9":
+                    string textLink9 = "https://fsx1.itstep.org/api/v1/files/SYbKvlAWVm1hS5j_E3YxLZa03bwWVJmh";
+                    string dueDate9 = new DateTime(2021, 01, 31).ToShortDateString();
+                    GetPostMystat(textLink9, false, pictureSpUrl, "", dueDate9, e);
                     break;
                 case "🚪 Exit":
                     var replyKeyboardStart = new ReplyKeyboardMarkup(new[]
