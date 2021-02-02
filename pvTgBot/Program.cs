@@ -43,23 +43,25 @@ namespace pvTgBot
         {          
             string pictureSpUrl = "https://fsx1.itstep.org/api/v1/files/eWXXHaiS0ttTYARWZ8d0dX7Y5MGJsfi2";
             string pictureBookSPUrl = "https://mystatfiles.itstep.org/index.php?view_key=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqdzNSpc0vHZUe86hVSyQqWkepFnUfyUoVzFt8Dz5ZbKSnZu2okV2GVfpS70IlpasachTEYmmjQS%2F%2BibhfucijLEk2LG7k3Du5Vc21Gpqnu4YA%3D%3D";
+            string pictureBookNPUrl = "https://mystatfiles.itstep.org/index.php?view_key=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfYr8rOlSUjSjyCoa%2F0K0Yl6sUPaVQELJc01L0mRmp7b5l7wZ7K5CZbSCCvBRPOPSLWvBORWouXtsJibPNqJyfo";
+            string pictureNpUrl = "https://fsx1.itstep.org/api/v1/files/30VVsrmWOSGLz53d3qy21Uisl7OmGYdR";
+
 
             var message = e.Message;
 
             if (message == null || message.Type != MessageType.Text)
                 return;
 
-            string name = $"{message.From.FirstName} {message.From.LastName}";
-            //string logText = $"{name} send message: '{message.Text}'";     
+            string name = $"{message.From.FirstName} {message.From.LastName}";    
             string logText = $"{DateTime.Now.ToShortTimeString()}\t{ name} send message: '{message.Text}'";       
             string logFileName = $"{DateTime.Now.ToShortDateString()}.txt";
 
             Console.WriteLine(logText);
                  
-            File.AppendAllText(logFileName, logText + "\n");                    
+            File.AppendAllText(logFileName, logText + "\n");
 
             switch (message.Text)
-            {                          
+            {
                 case "Start 🚀":
                 case "🔙 Back":
                 case "/start":
@@ -71,14 +73,10 @@ namespace pvTgBot
                             new KeyboardButton("📚 Materials")
                         },
                         new[]
-                        { 
+                        {
                             new KeyboardButton("👨🏼‍💻 Classwork"),
                             new KeyboardButton("🌐 Services")
-                            //new KeyboardButton("💬 About"),
                         }
-                        //new[] { 
-                        //    new KeyboardButton("🌐 Services"),
-                        //    new KeyboardButton("🚪 Exit") }
                         #region
                         //new []
                         //{
@@ -89,37 +87,49 @@ namespace pvTgBot
 #endregion
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);
-                    break;              
+                    break;
                 case "👨🏼‍💻 Classwork":
                     var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
                     {
-                        new [] 
-                        {
-                            new KeyboardButton("👨🏻‍🏫 SP"),
-                            new KeyboardButton("🔙 Back")
-                        }
-                       
+                        new[] { new KeyboardButton("👨🏼‍🏫 NP"), new KeyboardButton("👨🏻‍🏫 SP") },
+                        new [] { new KeyboardButton("🔙 Back") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);
-
-                    //await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫");
-
+                    break;
+                case "👨🏼‍🏫 NP":
+                    //GetNPcwCase(pictureNpUrl, e);
                     break;
                 case "👨🏻‍🏫 SP":
                     GetSPcwCase(pictureSpUrl, e);
                     break;
                 case "📚 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
-                    {                                                
-                        new KeyboardButton("📗 SP"),
-                        new KeyboardButton("🔙 Back")                                             
+                    {
+                        new[] { new KeyboardButton("📕 NP"), new KeyboardButton("📗 SP") },
+                        new[] { new KeyboardButton("🔙 Back") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
                     break;
+                case "📕 NP":
+                    var replyKeyboardNP = new ReplyKeyboardMarkup(new[]
+                    {
+                        new[] { new KeyboardButton("📕 NP #3"), new KeyboardButton("📕 NP #1-2") },
+                        new[] { new KeyboardButton("📚 Materials") }
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "Select a book to work with 👇", replyMarkup: replyKeyboardNP);
+                    break;
+                case "📕 NP #1-2":
+                    string bookLinkNP1_2 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqeVLkiJsVaQFA%2F7NUiU7iUjh533WWymIuNeiYU4n7d4%2FhyqogEF5sJfyrj8ShwsVJE%3D";
+                    GetPostMystat(bookLinkNP1_2, true, pictureBookNPUrl, "", "NP", e);
+                    break;
+                case "📕 NP #3":
+                    string bookLinkNP3 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqe5yJDyu3qQ5pbLGY%2F9dnPluCpD7EfptIXiylozywJ3lmb6%2FNQW9SwiSpm%2BJkSC0l8%3D";
+                    GetPostMystat(bookLinkNP3, true, pictureBookNPUrl, "", "NP", e);
+                    break;
+                #region -==== SP|Materials ====-
                 case "📗 SP":
                     var replyKeyboardSP = new ReplyKeyboardMarkup(new[]
                     {
-                        //new[] { new KeyboardButton("📗 SP #2") },
                         new[] { new KeyboardButton("📗 SP #1"), new KeyboardButton("📗 SP #2"), new KeyboardButton("📗 SP #4")},
                         new[] { new KeyboardButton("📚 Materials") }
                     }, true);
@@ -137,46 +147,39 @@ namespace pvTgBot
                     string bookLink3 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqfaot031Ha0EcSi5ViGxQDkmQZY9wMaU5xhPNleSvJW2faOfxpKPOWTvP8c%2BWBA1Wc%3D";
                     GetPostMystat(bookLink3, true, pictureBookSPUrl, "", "SP", e);
                     break;
+                #endregion
                 case "🌐 Services":
                     var replyKeyboardServices = new ReplyKeyboardMarkup(new[]
                     {
                         new[] { new KeyboardButton("💸 Exchange Rate"),
                         new KeyboardButton("📰 News") },
-                        new[] { new KeyboardButton("☀ Weather"), 
+                        new[] { new KeyboardButton("☀ Weather"),
                         new KeyboardButton("🔙 Back")}
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Simple services are always with you 💜", replyMarkup: replyKeyboardServices);
                     break;
                 case "📝 Homework":
-                    #region
-                    // var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
-                    //{
-                    //      new[] {
-                    //             //new KeyboardButton("📄 Homework #7"),
-                    //             new KeyboardButton("📄 Homework #6")
-                    //     },
-                    //     new[] {
-                    //             new KeyboardButton("📄 Homework #5"),
-                    //             new KeyboardButton("📄 Homework #4")                               
-                    //     },
-                    //     new[] { 
-                    //             new KeyboardButton("📄 Homework #2"),
-                    //             new KeyboardButton("📄 Homework #3")
-                    //     },
-                    //     new[] { 
-                    //         new KeyboardButton("📄 Homework #1"),
-                    //         new KeyboardButton("🔙 Back")}
-                    // }, true);
-                    #endregion
-
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
-                        new[] {
-                                new KeyboardButton("📄 SP"),
-                                new KeyboardButton("🔙 Back")}
+                        new[] { new KeyboardButton("📄 NP"),  new KeyboardButton("📄 SP") },
+                        new[] { new KeyboardButton("🔙 Back") }
                         }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
+                case "📄 NP":
+                    var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
+                    {
+                        new[] { new KeyboardButton("📄 NP #1") },
+                        new[] { new KeyboardButton("📝 Homework") }
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkNP);
+                    break;
+                case "📄 NP #1":
+                    string textLinkNP1 = "https://fsx1.itstep.org/api/v1/files/VUFOeJ-WrmCMfDTEJo3WsSMzPuGCbB3k";
+                    string dueDateNP1 = new DateTime(2021, 02, 09).ToShortDateString();
+                    GetPostMystat(textLinkNP1, false, pictureNpUrl, "", dueDateNP1, e);
+                    break;
+                #region -==== SP|HomeWorks ====-
                 case "📄 SP":
                     var replyKeyboardHomeWorkSP = new ReplyKeyboardMarkup(new[]
                    {
@@ -243,24 +246,18 @@ namespace pvTgBot
                     string dueDate9 = new DateTime(2021, 01, 31).ToShortDateString();
                     GetPostMystat(textLink9, false, pictureSpUrl, "", dueDate9, e);
                     break;
+                #endregion
                 case "🚪 Exit":
                     var replyKeyboardStart = new ReplyKeyboardMarkup(new[]
                     {
                         new[] { new KeyboardButton("Start 🚀") },
                     }, true);
                     var me = _bot.GetMeAsync().Result;
-                    //await _bot.SendTextMessageAsync(message.Chat.Id, $"{GetAboutCase()}");
                     await _bot.SendTextMessageAsync(message.Chat.Id, $"🤖{me.FirstName} Вітає!\nДля початку натисніть Start 🚀",
                         replyMarkup: replyKeyboardStart);
                     break;
                 case "/kurs":
                 case "💸 Exchange Rate":
-                    #region
-                    //var inlineKeyboardRates = new InlineKeyboardMarkup(new[] {
-                    //                new[] { InlineKeyboardButton.WithCallbackData("mono"),
-                    //                InlineKeyboardButton.WithCallbackData("privat") }
-                    //    });
-                    #endregion
                     await _bot.SendTextMessageAsync(e.Message.Chat.Id, ExchangeRatesCase()/*, replyMarkup: inlineKeyboardRates*/);
                     break;
                 case "/mono":
@@ -282,19 +279,21 @@ namespace pvTgBot
                     break;
                 case "/np":                
                     await _bot.SendTextMessageAsync(message.Chat.Id, NovaPoshta.GetTrackingData("20450328027569", "0504538315").Result);
-                    //"20450328027569", "0504538315"
-                    //20450328027569
                     break;
-                #region
-                //case "/time":
-                //    var response = DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString();
-                //    await _bot.SendTextMessageAsync(e.Message.Chat.Id, response);
-                //    break; 
-                #endregion
                 default:                                   
                     await _bot.SendStickerAsync(message.Chat.Id, stickersErr());          
                     break;
             }
+        }
+
+        private async static void GetNPcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
+        {
+            var link1 = "";
+
+            var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                new[] {InlineKeyboardButton.WithUrl(link1.Remove(0, 67).Trim('_').Replace('_', ' '), link1) } });
+
+            await _bot.SendPhotoAsync(e.Message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
         }
 
         private async static void GetSPcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
