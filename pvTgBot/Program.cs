@@ -329,7 +329,7 @@ namespace pvTgBot
 
         private async static void GetPostMystat(string link, bool isMaterial, string pictureLink, string filePath, string dueDate, Telegram.Bot.Args.MessageEventArgs e)
         {
-            if (/*numberBook != string.Empty*//*&& filePath == string.Empty*/isMaterial)
+            if (isMaterial)
             {
                 string fileName = GetFilenameFromWebServer(link);                
                 //fileName = fileName.Substring(0, fileName.LastIndexOf('_') + 0).Replace('_', ' '); 
