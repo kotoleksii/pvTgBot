@@ -169,7 +169,7 @@ namespace pvTgBot
                 case "📄 NP":
                     var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("📄 NP #1") },
+                        new[] { new KeyboardButton("📄 NP #2"), new KeyboardButton("📄 NP #1") },
                         new[] { new KeyboardButton("📝 Homework") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkNP);
@@ -178,6 +178,11 @@ namespace pvTgBot
                     string textLinkNP1 = "https://fsx1.itstep.org/api/v1/files/VUFOeJ-WrmCMfDTEJo3WsSMzPuGCbB3k";
                     string dueDateNP1 = new DateTime(2021, 02, 09).ToShortDateString();
                     GetPostMystat(textLinkNP1, false, pictureNpUrl, "", dueDateNP1, e);
+                    break;
+                case "📄 NP #2":
+                    string textLinkNP2 = "https://fsx1.itstep.org/api/v1/files/A6tMWi04qVMjIl8JG3ncQbc4HAn5Tckc";
+                    string dueDateNP2 = new DateTime(2021, 02, 09).ToShortDateString();
+                    GetPostMystat(textLinkNP2, false, pictureNpUrl, "", dueDateNP2, e);
                     break;
                 #region -==== SP|HomeWorks ====-
                 case "📄 SP":
@@ -326,8 +331,14 @@ namespace pvTgBot
         {
             if (/*numberBook != string.Empty*//*&& filePath == string.Empty*/isMaterial)
             {
-                string fileName = GetFilenameFromWebServer(link);
-                fileName = fileName.Substring(0, fileName.LastIndexOf('_') + 1).Replace('_', ' ');                
+                string fileName = GetFilenameFromWebServer(link);                
+                //fileName = fileName.Substring(0, fileName.LastIndexOf('_') + 0).Replace('_', ' '); 
+                
+                if(fileName.StartsWith("NP"))
+                    fileName = fileName.Substring(0, fileName.LastIndexOf('_') - 1).Replace('_', ' ');
+                else
+                    fileName = fileName.Substring(0, fileName.LastIndexOf('_') + 0).Replace('_', ' ');
+
 
                 var inlineKeyboard = new InlineKeyboardMarkup(new[] {
                     //InlineKeyboardButton.WithUrl($"Open {dueDate} book #{numberBook}", link)
