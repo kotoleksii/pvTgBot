@@ -97,7 +97,7 @@ namespace pvTgBot
                     await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);
                     break;
                 case "👨🏼‍🏫 NP":
-                    //GetNPcwCase(pictureNpUrl, e);
+                    GetNPcwCase(pictureNpUrl, e);
                     break;
                 case "👨🏻‍🏫 SP":
                     GetSPcwCase(pictureSpUrl, e);
@@ -169,7 +169,7 @@ namespace pvTgBot
                 case "📄 NP":
                     var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("📄 NP #2"), new KeyboardButton("📄 NP #1") },
+                        new[] { new KeyboardButton("📄 NP #3"), new KeyboardButton("📄 NP #2"), new KeyboardButton("📄 NP #1") },
                         new[] { new KeyboardButton("📝 Homework") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkNP);
@@ -183,6 +183,11 @@ namespace pvTgBot
                     string textLinkNP2 = "https://fsx1.itstep.org/api/v1/files/A6tMWi04qVMjIl8JG3ncQbc4HAn5Tckc";
                     string dueDateNP2 = new DateTime(2021, 02, 09).ToShortDateString();
                     GetPostMystat(textLinkNP2, false, pictureNpUrl, "", dueDateNP2, e);
+                    break;
+                case "📄 NP #3":
+                    string textLinkNP3 = "https://fsx1.itstep.org/api/v1/files/Clm-AaUXiGlEx7KDor1OYPREUKmOoIPj";
+                    string dueDateNP3 = new DateTime(2021, 02, 11).ToShortDateString();
+                    GetPostMystat(textLinkNP3, false, pictureNpUrl, "", dueDateNP3, e);
                     break;
                 #region -==== SP|HomeWorks ====-
                 case "📄 SP":
@@ -293,7 +298,7 @@ namespace pvTgBot
 
         private async static void GetNPcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
         {
-            var link1 = "";
+            var link1 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210204_socket";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
                 new[] {InlineKeyboardButton.WithUrl(link1.Remove(0, 67).Trim('_').Replace('_', ' '), link1) } });
