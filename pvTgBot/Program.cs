@@ -113,7 +113,8 @@ namespace pvTgBot
                 case "📕 NP":
                     var replyKeyboardNP = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("📕 NP #3"), new KeyboardButton("📕 NP #1-2") },
+                        new[] { new KeyboardButton("📕 NP #5") },
+                        new[] { new KeyboardButton("📕 NP #1-2"), new KeyboardButton("📕 NP #3"), new KeyboardButton("📕 NP #4") },
                         new[] { new KeyboardButton("📚 Materials") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a book to work with 👇", replyMarkup: replyKeyboardNP);
@@ -125,6 +126,14 @@ namespace pvTgBot
                 case "📕 NP #3":
                     string bookLinkNP3 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqe5yJDyu3qQ5pbLGY%2F9dnPluCpD7EfptIXiylozywJ3lmb6%2FNQW9SwiSpm%2BJkSC0l8%3D";
                     GetPostMystat(bookLinkNP3, true, pictureBookNPUrl, "", "NP", e);
+                    break;
+                case "📕 NP #4":
+                    string bookLinkNP4 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfjfadggiQwlQzepaBy9tknWuLdF4Bdbhm76UR2%2BUivjhCk3LoV4%2F340zsDCP3%2BLgE%3D";
+                    GetPostMystat(bookLinkNP4, true, pictureBookNPUrl, "", "NP", e);
+                    break;
+                case "📕 NP #5":
+                    string bookLinkNP5 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfurE8%2FPwAo%2BQGBnK2VZVYliOc7ZUykl7LGZ1OW282uNNFxYFE21%2FqbssP3jpz6nak%3D";
+                    GetPostMystat(bookLinkNP5, true, pictureBookNPUrl, "", "NP", e);
                     break;
                 #region -==== SP|Materials ====-
                 case "📗 SP":
