@@ -178,7 +178,7 @@ namespace pvTgBot
                 case "📄 NP":
                     var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("📄 NP #5"), new KeyboardButton("📄 NP #4") },
+                        new[] { new KeyboardButton("📄 NP #6"), new KeyboardButton("📄 NP #5"), new KeyboardButton("📄 NP #4") },
                         new[] { new KeyboardButton("📄 NP #3"), new KeyboardButton("📄 NP #2"), new KeyboardButton("📄 NP #1") },
                         new[] { new KeyboardButton("📝 Homework") }
                     }, true);
@@ -208,6 +208,11 @@ namespace pvTgBot
                     string textLinkNP5 = "https://fsx1.itstep.org/api/v1/files/81BMX8inUo-kdL0jUbpFUEj1KALY2Tj7";
                     string dueDateNP5 = new DateTime(2021, 02, 16).ToShortDateString();
                     GetPostMystat(textLinkNP5, false, pictureNpUrl, "", dueDateNP5, e);
+                    break;
+                case "📄 NP #6":
+                    string textLinkNP6 = "https://fsx1.itstep.org/api/v1/files/ain_6Goy5wBbcz_VRBkLWb3PYfXgKKrX";
+                    string dueDateNP6 = new DateTime(2021, 02, 18).ToShortDateString();
+                    GetPostMystat(textLinkNP6, false, pictureNpUrl, "", dueDateNP6, e);
                     break;
                 #region -==== SP|HomeWorks ====-
                 case "📄 SP":
@@ -322,8 +327,10 @@ namespace pvTgBot
             var link2 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210208_dgrm_socket";
             var link2_1 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210208_tcpClient_tcpListener";
             var link3 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210209_chat";
+            var link4 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210211_UdpClient";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                new[] {InlineKeyboardButton.WithUrl(link4.Remove(0, 67).Trim('_').Replace('_', ' '), link4) },
                 new[] {InlineKeyboardButton.WithUrl(link3.Remove(0, 67).Trim('_').Replace('_', ' '), link3) },
                 new[] {InlineKeyboardButton.WithUrl(link2.Remove(0, 67).Trim('_').Replace('_', ' '), link2),
                 InlineKeyboardButton.WithUrl(link2_1.Remove(0, 67).Trim('_').Replace('_', ' '), link2_1)},
