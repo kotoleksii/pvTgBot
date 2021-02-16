@@ -178,6 +178,7 @@ namespace pvTgBot
                 case "📄 NP":
                     var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
                     {
+                        new[] { new KeyboardButton("📄 NP #7")},
                         new[] { new KeyboardButton("📄 NP #6"), new KeyboardButton("📄 NP #5"), new KeyboardButton("📄 NP #4") },
                         new[] { new KeyboardButton("📄 NP #3"), new KeyboardButton("📄 NP #2"), new KeyboardButton("📄 NP #1") },
                         new[] { new KeyboardButton("📝 Homework") }
@@ -213,6 +214,11 @@ namespace pvTgBot
                     string textLinkNP6 = "https://fsx1.itstep.org/api/v1/files/ain_6Goy5wBbcz_VRBkLWb3PYfXgKKrX";
                     string dueDateNP6 = new DateTime(2021, 02, 18).ToShortDateString();
                     GetPostMystat(textLinkNP6, false, pictureNpUrl, "", dueDateNP6, e);
+                    break;
+                case "📄 NP #7":
+                    string textLinkNP7 = "https://fsx1.itstep.org/api/v1/files/BxRKRq71_J9MFY-siepbBGn3fLq9rvg7";
+                    string dueDateNP7 = new DateTime(2021, 02, 18).ToShortDateString();
+                    GetPostMystat(textLinkNP7, false, pictureNpUrl, "", dueDateNP7, e);
                     break;
                 #region -==== SP|HomeWorks ====-
                 case "📄 SP":
