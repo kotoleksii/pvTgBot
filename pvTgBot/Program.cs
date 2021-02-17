@@ -343,8 +343,12 @@ namespace pvTgBot
             var link2_1 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210208_tcpClient_tcpListener";
             var link3 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210209_chat";
             var link4 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210211_UdpClient";
+            var link5 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210215_tcp_bin";
+            var link6 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210216_http";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                new[] {InlineKeyboardButton.WithUrl(link6.Remove(0, 67).Trim('_').Replace('_', ' '), link6) },
+                new[] {InlineKeyboardButton.WithUrl(link5.Remove(0, 67).Trim('_').Replace('_', ' '), link5) },
                 new[] {InlineKeyboardButton.WithUrl(link4.Remove(0, 67).Trim('_').Replace('_', ' '), link4) },
                 new[] {InlineKeyboardButton.WithUrl(link3.Remove(0, 67).Trim('_').Replace('_', ' '), link3) },
                 new[] {InlineKeyboardButton.WithUrl(link2.Remove(0, 67).Trim('_').Replace('_', ' '), link2),
