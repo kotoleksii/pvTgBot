@@ -182,7 +182,7 @@ namespace pvTgBot
                 case "📄 NP":
                     var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("📄 NP #8"), new KeyboardButton("📄 NP #7")},
+                        new[] { /*new KeyboardButton("📄 NP #9"),*/ new KeyboardButton("📄 NP #8"), new KeyboardButton("📄 NP #7")},
                         new[] { new KeyboardButton("📄 NP #6"), new KeyboardButton("📄 NP #5"), new KeyboardButton("📄 NP #4") },
                         new[] { new KeyboardButton("📄 NP #3"), new KeyboardButton("📄 NP #2"), new KeyboardButton("📄 NP #1") },
                         new[] { new KeyboardButton("📝 Homework") }
