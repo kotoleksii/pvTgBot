@@ -182,7 +182,7 @@ namespace pvTgBot
                 case "📄 NP":
                     var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { /*new KeyboardButton("📄 NP #9"),*/ new KeyboardButton("📄 NP #8"), new KeyboardButton("📄 NP #7")},
+                        new[] { new KeyboardButton("📄 NP #9"), new KeyboardButton("📄 NP #8"), new KeyboardButton("📄 NP #7")},
                         new[] { new KeyboardButton("📄 NP #6"), new KeyboardButton("📄 NP #5"), new KeyboardButton("📄 NP #4") },
                         new[] { new KeyboardButton("📄 NP #3"), new KeyboardButton("📄 NP #2"), new KeyboardButton("📄 NP #1") },
                         new[] { new KeyboardButton("📝 Homework") }
@@ -228,6 +228,11 @@ namespace pvTgBot
                     string textLinkNP8 = "https://fsx1.itstep.org/api/v1/files/m8fQNO5Ki7JNShgfLjyycvNUYM5z0B9u";
                     string dueDateNP8 = new DateTime(2021, 02, 19).ToShortDateString();
                     GetPostMystat(textLinkNP8, false, pictureNpUrl, "", dueDateNP8, e);
+                    break;
+                case "📄 NP #9":
+                    string textLinkNP9 = "https://fsx1.itstep.org/api/v1/files/dt_-25yj2WOaRHOMBPn1HDeY32MD4inu";
+                    string dueDateNP9 = new DateTime(2021, 02, 26).ToShortDateString();
+                    GetPostMystat(textLinkNP9, false, pictureNpUrl, "", dueDateNP9, e);
                     break;
                 #region -==== SP|HomeWorks ====-
                 case "📄 SP":
@@ -345,8 +350,12 @@ namespace pvTgBot
             var link4 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210211_UdpClient";
             var link5 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210215_tcp_bin";
             var link6 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210216_http";
+            var link7 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/20210218_http2";
+            var link7_1 = "https://github.com/itstep-org/itstep_pv912_np/tree/master/MailClient/hw_3_MailClient";
 
             var inlineKeyboard = new InlineKeyboardMarkup(new[] {
+                 new[] {InlineKeyboardButton.WithUrl(link7.Remove(0, 67).Trim('_').Replace('_', ' '), link7),
+                InlineKeyboardButton.WithUrl(link7_1.Remove(0, 74).Trim('_').Replace('_', ' '), link7_1)},
                 new[] {InlineKeyboardButton.WithUrl(link6.Remove(0, 67).Trim('_').Replace('_', ' '), link6) },
                 new[] {InlineKeyboardButton.WithUrl(link5.Remove(0, 67).Trim('_').Replace('_', ' '), link5) },
                 new[] {InlineKeyboardButton.WithUrl(link4.Remove(0, 67).Trim('_').Replace('_', ' '), link4) },
