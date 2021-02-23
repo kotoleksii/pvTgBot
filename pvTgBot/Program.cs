@@ -45,7 +45,7 @@ namespace pvTgBot
             string pictureBookSPUrl = "https://mystatfiles.itstep.org/index.php?view_key=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqdzNSpc0vHZUe86hVSyQqWkepFnUfyUoVzFt8Dz5ZbKSnZu2okV2GVfpS70IlpasachTEYmmjQS%2F%2BibhfucijLEk2LG7k3Du5Vc21Gpqnu4YA%3D%3D";
             string pictureBookNPUrl = "https://mystatfiles.itstep.org/index.php?view_key=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfYr8rOlSUjSjyCoa%2F0K0Yl6sUPaVQELJc01L0mRmp7b5l7wZ7K5CZbSCCvBRPOPSLWvBORWouXtsJibPNqJyfo";
             string pictureNpUrl = "https://fsx1.itstep.org/api/v1/files/30VVsrmWOSGLz53d3qy21Uisl7OmGYdR";
-
+            string pictureKursovaUrl = "https://fsx1.itstep.org/api/v1/files/j307Fi5ICYugQSmK_idPobAYNHM2r-JR";
 
             var message = e.Message;
 
@@ -174,11 +174,25 @@ namespace pvTgBot
                 case "📝 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
-                        new[] { new KeyboardButton("📄 NP"),  new KeyboardButton("📄 SP") },
+                        new[] { new KeyboardButton("📄 Курсова"), new KeyboardButton("📄 NP"),  new KeyboardButton("📄 SP") },
                         new[] { new KeyboardButton("🔙 Back") }
                         }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
+                case "📄 Курсова":
+                    var replyKeyboardHomeWorkKursova = new ReplyKeyboardMarkup(new[]
+                    {
+                        new[] {/* new KeyboardButton("📄 Курсова #3"), new KeyboardButton("📄 Курсова #2"),*/ new KeyboardButton("📄 Курсова #1") },
+                        new[] { new KeyboardButton("📝 Homework") }
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkKursova);
+                    break;
+                case "📄 Курсова #1":
+                    string textLinkKurs1 = "https://fsx1.itstep.org/api/v1/files/yJb-IIv8UI3d0KPE-6EsQXPSW6tq09KR";
+                    string dueDateKurs1 = new DateTime(2021, 03, 01).ToShortDateString();
+                    GetPostMystat(textLinkKurs1, false, pictureKursovaUrl, "", dueDateKurs1, e);
+                    break;
+                #region  -==== NP|HomeWorks ====-
                 case "📄 NP":
                     var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
                     {
@@ -233,7 +247,8 @@ namespace pvTgBot
                     string textLinkNP9 = "https://fsx1.itstep.org/api/v1/files/dt_-25yj2WOaRHOMBPn1HDeY32MD4inu";
                     string dueDateNP9 = new DateTime(2021, 02, 26).ToShortDateString();
                     GetPostMystat(textLinkNP9, false, pictureNpUrl, "", dueDateNP9, e);
-                    break;
+                    break; 
+                #endregion
                 #region -==== SP|HomeWorks ====-
                 case "📄 SP":
                     var replyKeyboardHomeWorkSP = new ReplyKeyboardMarkup(new[]
