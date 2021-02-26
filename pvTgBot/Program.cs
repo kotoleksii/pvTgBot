@@ -182,7 +182,8 @@ namespace pvTgBot
                 case "📄 Курсова":
                     var replyKeyboardHomeWorkKursova = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { /*new KeyboardButton("📄 Курсова #3"),*/ new KeyboardButton("📄 Курсова #2"), new KeyboardButton("📄 Курсова #1") },
+                        new[] { new KeyboardButton("📄 Курсова #3") },
+                        new[] { new KeyboardButton("📄 Курсова #2"), new KeyboardButton("📄 Курсова #1") },
                         new[] { new KeyboardButton("📝 Homework") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkKursova);
@@ -196,6 +197,11 @@ namespace pvTgBot
                     string textLinkKurs2 = "https://fsx1.itstep.org/api/v1/files/PJpFybgfkow5DgBJFYpqUXCHFzRXdWt2";
                     string dueDateKurs2 = new DateTime(2021, 03, 02).ToShortDateString();
                     GetPostMystat(textLinkKurs2, false, pictureKursovaUrl, "", dueDateKurs2, e);
+                    break;
+                case "📄 Курсова #3":
+                    string textLinkKurs3 = "https://fsx1.itstep.org/api/v1/files/eZ10YPvW2WelDKqvA0xi-b5aUNJTiDua";
+                    string dueDateKurs3 = new DateTime(2021, 03, 04).ToShortDateString();
+                    GetPostMystat(textLinkKurs3, false, pictureKursovaUrl, "", dueDateKurs3, e);
                     break;
                 #region  -==== NP|HomeWorks ====-
                 case "📄 NP":
