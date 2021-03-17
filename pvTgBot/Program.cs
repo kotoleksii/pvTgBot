@@ -46,6 +46,8 @@ namespace pvTgBot
             string pictureBookNPUrl = "https://mystatfiles.itstep.org/index.php?view_key=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfYr8rOlSUjSjyCoa%2F0K0Yl6sUPaVQELJc01L0mRmp7b5l7wZ7K5CZbSCCvBRPOPSLWvBORWouXtsJibPNqJyfo";
             string pictureNpUrl = "https://fsx1.itstep.org/api/v1/files/30VVsrmWOSGLz53d3qy21Uisl7OmGYdR";
             string pictureKursovaUrl = "https://fsx1.itstep.org/api/v1/files/j307Fi5ICYugQSmK_idPobAYNHM2r-JR";
+            string pictureHTMLCSS = "https://fsx1.itstep.org/api/v1/files/0A7SXDO6Jxv8B7Zxk_AknIhhp2z67Uzi";
+            string pictureBookHTML = "https://mystatfiles.itstep.org/index.php?view_key=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfhZqwBaI5DMQwnbYrv%2BG%2B6ImU1KGUL0jUOTKJc4eJq5ozVpsuu%2BiYqhmOcNgfC2kkBE%2BTzB%2BcYitwAt%2BQAutQ9TOZ7FGm4Tb6C8%2FAqCxxOOw%3D%3D";
 
             var message = e.Message;
 
@@ -86,7 +88,15 @@ namespace pvTgBot
                         //},
 #endregion
                     }, true);
-                    await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);
+
+                    try
+                    {
+                        await _bot.SendTextMessageAsync(message.Chat.Id, $"Привіт, {message.From.FirstName}👋\nЩо робитимемо? ⬇", replyMarkup: replyKeyboard);
+                    }
+                    catch (Exception)
+                    {
+                        await _bot.SendTextMessageAsync(message.Chat.Id, "blocked error");
+                    }
                     break;
                 case "👨🏼‍💻 Classwork":
                     var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
@@ -105,16 +115,43 @@ namespace pvTgBot
                 case "📚 Materials":
                     var replyKeyboardEM = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("📕 NP"), new KeyboardButton("📗 SP") },
+                        new[] { new KeyboardButton("📘 HTML CSS") },
+                        new[] {new KeyboardButton("📕 NP"), new KeyboardButton("📗 SP") },
                         new[] { new KeyboardButton("🔙 Back") }
-                    }, true);
+                    }, true) ;
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Pump your skill! 💪", replyMarkup: replyKeyboardEM);
                     break;
+                case "📘 HTML CSS":
+                    var replyKeyboardHTML = new ReplyKeyboardMarkup(new[]
+                    {
+                        new[] { new KeyboardButton("📘 HTML CSS #4"), new KeyboardButton("📘 HTML CSS #3") },
+                        new[] { new KeyboardButton("📘 HTML CSS #2"), new KeyboardButton("📘 HTML CSS #1") },
+                        new[] { new KeyboardButton("📚 Materials") }
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "Select a book to work with 👇", replyMarkup: replyKeyboardHTML);
+                    break;
+                case "📘 HTML CSS #1":
+                    string bookLinkHTML1 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqd6YTIBaqkh2JWgCKIfgy9R7UgKDWC98%2B0eJ5mWnXg55%2BOhHC1Ifr4o6%2Fg8I4j9arQ%3D";
+                    GetPostMystat(bookLinkHTML1, true, pictureBookHTML, "", "HTML CSS", e);
+                    break;
+                case "📘 HTML CSS #2":
+                    string bookLinkHTML2 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfrFxwFMgNloC%2FWRB7IielpHTnPvn5d8H5PYutAeofdNpt%2BBMX9cvQ%2BEed%2FWe04Z50%3D";
+                    GetPostMystat(bookLinkHTML2, true, pictureBookHTML, "", "HTML CSS", e);
+                    break;
+                case "📘 HTML CSS #3":
+                    string bookLinkHTML3 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqfLpJNTvvbQya4ntYCnsUxzE09Lxj6eXw3Fgkh%2BVXMVj3VGhnkgzHDfOKXVbkzJ%2FZE%3D";
+                    GetPostMystat(bookLinkHTML3, true, pictureBookHTML, "", "HTML CSS", e);
+                    break;
+                case "📘 HTML CSS #4":
+                    string bookLinkHTML4 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7JtqcZlhUScG5hr8mG3Cqq561JLP%2BMf%2BfhE0pGaSn1BlPDEPOulyM5EfTpgWOGfv7kbvc%3D";
+                    GetPostMystat(bookLinkHTML4, true, pictureBookHTML, "", "HTML CSS", e);
+                    break;
+                #region -==== NP|Materials ====-
                 case "📕 NP":
                     var replyKeyboardNP = new ReplyKeyboardMarkup(new[]
                     {
                         new[] { new KeyboardButton("📕 NP #6"), new KeyboardButton("📕 NP #5") },
-                        new[] { new KeyboardButton("📕 NP #1-2"), new KeyboardButton("📕 NP #3"), new KeyboardButton("📕 NP #4") },
+                        new[] { new KeyboardButton("📕 NP #4"), new KeyboardButton("📕 NP #3"), new KeyboardButton("📕 NP #1-2") },
                         new[] { new KeyboardButton("📚 Materials") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a book to work with 👇", replyMarkup: replyKeyboardNP);
@@ -138,12 +175,13 @@ namespace pvTgBot
                 case "📕 NP #6":
                     string bookLinkNP6 = "https://mystatfiles.itstep.org/index.php?download=rtILv2awXkYrSQ7WVzOr0I8Q3wN1fIYWXbiFzN7Jtqd10%2FeHoa3CTQy7DaZnXvqwH7WI47xpVVlqfx1lVw9nWHOX06VuZqHz5jlKY5PXtaE%3D";
                     GetPostMystat(bookLinkNP6, true, pictureBookNPUrl, "", "NP", e);
-                    break;
+                    break; 
+                #endregion
                 #region -==== SP|Materials ====-
                 case "📗 SP":
                     var replyKeyboardSP = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("📗 SP #1"), new KeyboardButton("📗 SP #2"), new KeyboardButton("📗 SP #4")},
+                        new[] { new KeyboardButton("📗 SP #4"), new KeyboardButton("📗 SP #2"), new KeyboardButton("📗 SP #1")},
                         new[] { new KeyboardButton("📚 Materials") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a book to work with 👇", replyMarkup: replyKeyboardSP);
@@ -174,11 +212,32 @@ namespace pvTgBot
                 case "📝 Homework":
                     var replyKeyboardHomeWork = new ReplyKeyboardMarkup(new[]
                    {
+                        new[] { new KeyboardButton("📄 HTML5 CSS3") },
                         new[] { new KeyboardButton("📄 Курсова"), new KeyboardButton("📄 NP"),  new KeyboardButton("📄 SP") },
                         new[] { new KeyboardButton("🔙 Back") }
                         }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Good Luck! 👌", replyMarkup: replyKeyboardHomeWork);
                     break;
+                case "📄 HTML5 CSS3":
+                    var replyKeyboardHomeWorkHTMLCSS = new ReplyKeyboardMarkup(new[]
+                    {
+                        new[] { new KeyboardButton("📄 HTML5 CSS3 #2"), new KeyboardButton("📄 HTML5 CSS3 #1") },
+                        new[] { new KeyboardButton("📝 Homework") }
+                    }, true);
+                    await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkHTMLCSS);
+                    break;
+                case "📄 HTML5 CSS3 #1":
+                    string textLinkHTML1 = "https://fsx1.itstep.org/api/v1/files/9icaCSE-rysBueJrD9_ABmJcA1KkwhME";
+                    string dueDateHTML1 = new DateTime(2021, 03, 22).ToShortDateString();
+                    GetPostMystat(textLinkHTML1, false, pictureHTMLCSS, "", dueDateHTML1, e);
+                    break;
+                case "📄 HTML5 CSS3 #2":
+                    string textLinkHTML2 = "https://fsx1.itstep.org/api/v1/files/th7g9_brSZ0IClO2cGak_UxRTM_Ynxxy";
+                    string dueDateHTML2 = new DateTime(2021, 03, 23).ToShortDateString();
+                    GetPostMystat(textLinkHTML2, false, pictureHTMLCSS, "", dueDateHTML2, e);
+                    break;
+
+                #region -==== Kurs|HomeWorks ====-
                 case "📄 Курсова":
                     var replyKeyboardHomeWorkKursova = new ReplyKeyboardMarkup(new[]
                     {
@@ -202,7 +261,8 @@ namespace pvTgBot
                     string textLinkKurs3 = "https://fsx1.itstep.org/api/v1/files/eZ10YPvW2WelDKqvA0xi-b5aUNJTiDua";
                     string dueDateKurs3 = new DateTime(2021, 03, 04).ToShortDateString();
                     GetPostMystat(textLinkKurs3, false, pictureKursovaUrl, "", dueDateKurs3, e);
-                    break;
+                    break; 
+                #endregion
                 #region  -==== NP|HomeWorks ====-
                 case "📄 NP":
                     var replyKeyboardHomeWorkNP = new ReplyKeyboardMarkup(new[]
@@ -339,12 +399,17 @@ namespace pvTgBot
                     break;
                 case "/kurs":
                 case "💸 Exchange Rate":
-                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, ExchangeRatesCase()/*, replyMarkup: inlineKeyboardRates*/);
+                    var replyKeyboardExchange = new ReplyKeyboardMarkup(new[]
+                    {
+                        new[] { new KeyboardButton("🐈 Mono"), new KeyboardButton("🏪 Privat") },
+                        new[] { new KeyboardButton("🌐 Services") }
+                    }, true);
+                    await _bot.SendTextMessageAsync(e.Message.Chat.Id, ExchangeRatesCase(), replyMarkup: replyKeyboardExchange);
                     break;
-                case "/mono":
+                case "🐈 Mono":
                     MonoBankExchangeRatesCase(e);                   
                     break;
-                case "/privat":
+                case "🏪 Privat":
                     string privatLink = "https://privatbank.ua/uploads/media/default/0001/14/a6507601ef7e311f4d5af21ea9b8e0ce69105850.png";
                     await _bot.SendPhotoAsync(e.Message.Chat.Id, privatLink,
                             PrivatCurrencyAPI.GetPrivatExchangeRate().Result + "\n👇🏻 підтримати автора бота\n📑 4149 4991 1185 5175");
@@ -485,8 +550,8 @@ namespace pvTgBot
         public static string ExchangeRatesCase()
         {
             return $"📊 Актуальні курси валют:\n\nНБУ\n{NBUCurrencyAPI.GetExchangeRateNBU()}\n\n" +
-                $"MonoBank  /mono\n" +
-                $"ПриватБанк  /privat\n\n" +
+                //$"MonoBank  /mono\n" +
+                //$"ПриватБанк  /privat\n\n" +
                         $"EXMO\n{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("BTC", "USD").Result}" +
                             $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("ETH", "USD").Result}" +
                                 $"{EXMOCurrencyAPI.GetExchangeDigitRateEXMO("LTC", "USD").Result}" +
