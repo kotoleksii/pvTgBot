@@ -101,10 +101,13 @@ namespace pvTgBot
                 case "👨🏼‍💻 Classwork":
                     var replyKeyboardCW = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("👨🏼‍🏫 NP"), new KeyboardButton("👨🏻‍🏫 SP") },
+                        new[] { new KeyboardButton("👨🏽‍🏫 HTML"), new KeyboardButton("👨🏼‍🏫 NP"), new KeyboardButton("👨🏻‍🏫 SP") },
                         new [] { new KeyboardButton("🔙 Back") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "👨‍🏫", replyMarkup: replyKeyboardCW);
+                    break;
+                case "👨🏽‍🏫 HTML":
+                    GetHTMLcwCase(pictureHTMLCSS, e);
                     break;
                 case "👨🏼‍🏫 NP":
                     GetNPcwCase(pictureNpUrl, e);
@@ -221,22 +224,37 @@ namespace pvTgBot
                 case "📄 HTML5 CSS3":
                     var replyKeyboardHomeWorkHTMLCSS = new ReplyKeyboardMarkup(new[]
                     {
-                        new[] { new KeyboardButton("📄 HTML5 CSS3 #2"), new KeyboardButton("📄 HTML5 CSS3 #1") },
+                        new[] { new KeyboardButton("📄 HTML #5"), new KeyboardButton("📄 HTML #4") },
+                        new[] { new KeyboardButton("📄 HTML #3"), new KeyboardButton("📄 HTML #2"), new KeyboardButton("📄 HTML #1") },
                         new[] { new KeyboardButton("📝 Homework") }
                     }, true);
                     await _bot.SendTextMessageAsync(message.Chat.Id, "Select a task to work with 👇", replyMarkup: replyKeyboardHomeWorkHTMLCSS);
                     break;
-                case "📄 HTML5 CSS3 #1":
+                case "📄 HTML #1":
                     string textLinkHTML1 = "https://fsx1.itstep.org/api/v1/files/9icaCSE-rysBueJrD9_ABmJcA1KkwhME";
                     string dueDateHTML1 = new DateTime(2021, 03, 22).ToShortDateString();
                     GetPostMystat(textLinkHTML1, false, pictureHTMLCSS, "", dueDateHTML1, e);
                     break;
-                case "📄 HTML5 CSS3 #2":
+                case "📄 HTML #2":
                     string textLinkHTML2 = "https://fsx1.itstep.org/api/v1/files/th7g9_brSZ0IClO2cGak_UxRTM_Ynxxy";
                     string dueDateHTML2 = new DateTime(2021, 03, 23).ToShortDateString();
                     GetPostMystat(textLinkHTML2, false, pictureHTMLCSS, "", dueDateHTML2, e);
                     break;
-
+                case "📄 HTML #3":
+                    string textLinkHTML3 = "https://fsx1.itstep.org/api/v1/files/L9iExFI6yu0Oe7BOMkbzjtzRaP8zEVhv";
+                    string dueDateHTML3 = new DateTime(2021, 03, 29).ToShortDateString();
+                    GetPostMystat(textLinkHTML3, true, pictureHTMLCSS, "", dueDateHTML3, e);
+                    break;
+                case "📄 HTML #4":
+                    string textLinkHTML4 = "https://fsx1.itstep.org/api/v1/files/aFn9yADsQQFIC8ySdyYSnW9BgiINCbao";
+                    string dueDateHTML4 = new DateTime(2021, 03, 30).ToShortDateString();
+                    GetPostMystat(textLinkHTML4, false, pictureHTMLCSS, "", dueDateHTML4, e);
+                    break;
+                case "📄 HTML #5":
+                    string textLinkHTML5 = "https://fsx1.itstep.org/api/v1/files/RhcQXKBJES0V7wsysEjWzLpfnuIAKBwW";
+                    string dueDateHTML5 = new DateTime(2021, 04, 01).ToShortDateString();
+                    GetPostMystat(textLinkHTML5, true, pictureHTMLCSS, "", dueDateHTML5, e);
+                    break;
                 #region -==== Kurs|HomeWorks ====-
                 case "📄 Курсова":
                     var replyKeyboardHomeWorkKursova = new ReplyKeyboardMarkup(new[]
@@ -430,6 +448,22 @@ namespace pvTgBot
                     await _bot.SendStickerAsync(message.Chat.Id, stickersErr());          
                     break;
             }
+        }
+
+        private async static void GetHTMLcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)
+        {
+            var link1 = "https://github.com/itstep-org/itstep_pv912_html_css/tree/master/20210315_intro";
+            var link2 = "https://github.com/itstep-org/itstep_pv912_html_css/tree/master/20210316_blocks";
+            var link3 = "https://github.com/itstep-org/itstep_pv912_html_css/tree/master/20210322_positions";
+            var link4 = "https://github.com/itstep-org/itstep_pv912_html_css/tree/master/20210323_animation_adaptive";
+
+            var inlineKeyboard = new InlineKeyboardMarkup(new[] {               
+                new[] {InlineKeyboardButton.WithUrl(link4.Remove(0, 73).Trim('_').Replace('_', ' '), link4) },
+                new[] {InlineKeyboardButton.WithUrl(link3.Remove(0, 73).Trim('_').Replace('_', ' '), link3) },
+                new[] {InlineKeyboardButton.WithUrl(link2.Remove(0, 73).Trim('_').Replace('_', ' '), link2) },
+                new[] {InlineKeyboardButton.WithUrl(link1.Remove(0, 73).Trim('_').Replace('_', ' '), link1) } });
+
+            await _bot.SendPhotoAsync(e.Message.From.Id, pictureUrl, "Choose the lesson you need 👇", replyMarkup: inlineKeyboard);
         }
 
         private async static void GetNPcwCase(string pictureUrl, Telegram.Bot.Args.MessageEventArgs e)

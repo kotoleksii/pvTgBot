@@ -57,7 +57,7 @@ namespace pvTgBot.Services
                 $"🗓 {DateTime.Now.ToLongDateString()}\n\n" +
                 $"Валюта     Купівля     Продаж\n" +
                 $"🇺🇸{USD}       {USrateBuy}          {USrateSell}\n" +
-                $"🇪🇺{EUR}       {EUrateBuy}          {EUrateSell}\n" +
+                $"🇪🇺{EUR}       {EUrateBuy}          {EUrateSell}\n"+
                 $"💹{BTC}       {BTCrateBuy}        {BTCrateSell}\n";
         }
     }
