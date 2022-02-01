@@ -25,7 +25,7 @@ namespace pvTgBot
 
             _rnd = new Random();
 
-            _bot = new TelegramBotClient("1466263903:AAH11p2p6Ha3NB44GPkgN1_6fslGiz-8IJc");
+            _bot = new TelegramBotClient("token");
 
             _bot.OnMessage += BotOnMessageReceived;
             //_bot.OnCallbackQuery += BotOnCallBackQueryReceived;
